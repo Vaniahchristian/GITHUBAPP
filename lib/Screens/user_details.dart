@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'github_service.dart';
-import 'github_user.dart';
+import '../Services/github_service.dart';
+import '../Models/github_user.dart';
 
 class UserDetails extends StatelessWidget {
   final GitHubUser user;
@@ -63,7 +63,11 @@ class UserDetails extends StatelessWidget {
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(userDetails.avatarUrl),
                       radius: 50,
+
+
                     ),
+
+
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -76,43 +80,95 @@ class UserDetails extends StatelessWidget {
                       'Name: ${userDetails.name}',
                       style: TextStyle(fontSize: 16),
                     ),
+                  Divider(
+                    thickness: 1.0,
+                    color: Colors.grey,
+                    height: 10.0,
+                  ),
                   if (userDetails.location != null)
                     Text(
                       'Location: ${userDetails.location}',
                       style: TextStyle(fontSize: 16),
                     ),
+
+                  Divider(
+                    thickness: 1.0,
+                    color: Colors.grey,
+                    height: 10.0,
+                  ),
                   Text(
                     'Public Repositories: ${userDetails.publicRepos}',
                     style: TextStyle(fontSize: 16),
+                  ),
+
+                  Divider(
+                    thickness: 1.0,
+                    color: Colors.grey,
+                    height: 10.0,
                   ),
                   Text(
                     'Followers: ${userDetails.followers}',
                     style: TextStyle(fontSize: 16),
                   ),
+
+                  Divider(
+                    thickness: 1.0,
+                    color: Colors.grey,
+                    height: 10.0,
+                  ),
                   Text(
                     'Following: ${userDetails.following}',
                     style: TextStyle(fontSize: 16),
+                  ),
+
+                  Divider(
+                    thickness: 1.0,
+                    color: Colors.grey,
+                    height: 10.0,
                   ),
                   if (userDetails.bio != null)
                     Text(
                       'Bio: ${userDetails.bio}',
                       style: TextStyle(fontSize: 16),
                     ),
+
                   if (userDetails.email != null)
                     Text(
                       'Email: ${userDetails.email}',
                       style: TextStyle(fontSize: 16),
                     ),
+
+                  Divider(
+                    thickness: 1.0,
+                    color: Colors.grey,
+                    height: 10.0,
+                  ),
+
                   if (userDetails.company != null)
                     Text(
                       'Company: ${userDetails.company}',
                       style: TextStyle(fontSize: 16),
                     ),
+
+                  Divider(
+                    thickness: 1.0,
+                    color: Colors.grey,
+                    height: 10.0,
+                  ),
+
                   if (userDetails.blog != null)
                     Text(
                       'Blog: ${userDetails.blog}',
                       style: TextStyle(fontSize: 16),
                     ),
+
+                  Divider(
+                    thickness: 1.0,
+                    color: Colors.grey,
+                    height: 10.0,
+                  ),
+
+
                   SizedBox(height: 16),
                   Text(
                     'Profile URL:',
@@ -127,6 +183,13 @@ class UserDetails extends StatelessWidget {
                       // Handle URL tap if necessary
                     },
                   ),
+
+
+                  Divider( // Creates a horizontal line
+                    thickness: 1.0, // Adjust thickness as needed
+                    color: Colors.grey, // Change color if desired
+                    height: 10.0, // Controls the space occupied by the divider
+                  )
                 ],
               ),
             );

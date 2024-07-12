@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'github_service.dart';
-import 'github_user.dart';
+import '../Services/github_service.dart';
+import '../Models/github_user.dart';
 import 'user_details.dart';
 
 GitHubService _githubService = GitHubService();
@@ -11,6 +11,8 @@ Widget UserList(BuildContext context, String location) {
       title: Text('Users in $location',
         style: TextStyle(color: Colors.white),),
       backgroundColor: Colors.blue,
+
+
     ),
     body: FutureBuilder<List<dynamic>>(
       future: _githubService.fetchUsersByLocation(location),
@@ -30,23 +32,40 @@ Widget UserList(BuildContext context, String location) {
             itemCount: users.length,
             itemBuilder: (context, index) {
               final user = users[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(user.avatarUrl),
-                ),
-                title: Text(user.login),
-                subtitle: Text(user.htmlUrl),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UserDetails(user: user),
+              return Column(
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(user.avatarUrl),
                     ),
-                  );
-                },
+                    title: Text(user.login),
+                    subtitle: Text(user.htmlUrl),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserDetails(user: user),
+                        ),
+
+
+
+
+                      );
+                    },
+                  ),
+                  // Add a divider or container for the line
+                  index != users.length - 1 // Only add divider if not last item
+                      ? Divider(
+                    thickness: 1.0,
+                    color: Colors.grey,
+                    height: 10.0,
+                  )
+                      : Container(), // Empty container for last item (optional)
+                ],
               );
             },
           );
+          ;
         }
       },
     ),

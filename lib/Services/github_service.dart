@@ -24,4 +24,28 @@ class GitHubService {
       throw Exception('Failed to load user details');
     }
   }
+
+  Future<List<dynamic>> fetchUsersByFilter({
+    required String name,
+    int minFollowers = 0,
+    int minRepos = 0,
+  }) async {
+    // Replace with your actual API call with filters
+    final url = 'https://api.github.com/search/users?q=$name&followers:>=$minFollowers&repos:>=$minRepos';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['items'];
+    } else {
+      throw Exception('Failed to load users');
+    }
+  }
+
+
 }
+
+
+
+
+

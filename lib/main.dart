@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Screens/home.dart';
 import 'Screens/splash.dart';
-import 'Screens/user_list.dart';
+
 import 'Screens/user_details.dart';
 import 'Models/github_user.dart';
 
@@ -19,19 +19,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'GITHUB USERS APP',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
       initialRoute: '/splash',
       routes: {
         '/splash': (context) => SplashScreen(),
         '/home': (context) => Homepage(),
-        '/userList': (context) => Builder(
-          builder: (context) {
-            final args = ModalRoute.of(context)!.settings.arguments as String;
-            return UserList(context, args);
-          },
-        ),
+
+
         '/userDetails': (context) => Builder(
           builder: (context) {
             final args = ModalRoute.of(context)!.settings.arguments as GitHubUser;

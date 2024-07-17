@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import '../Services/github_service.dart';
@@ -32,14 +33,18 @@ class UserDetails extends StatelessWidget {
         toolbarHeight: 60,
         title: Text(user.login,
           style: TextStyle(color: Colors.white),),
+
+        iconTheme: IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () => _shareProfile(user),
+            color: Colors.white,
           ),
 
         ],
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF000080),
+
 
       ),
       body: FutureBuilder<Map<String, dynamic>>(
@@ -56,145 +61,127 @@ class UserDetails extends StatelessWidget {
 
             return Padding(
               padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(userDetails.avatarUrl),
-                      radius: 50,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(userDetails.avatarUrl),
+                        radius: 50,
+                      ),
+                    ),
+                    SizedBox(height: 1),
 
 
+                    Center(
+                    child:Text(
+                     '${userDetails.login}',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey),
+                    ),
+                   ),
+
+
+
+                    SizedBox(height: 1),
+                    if (userDetails.name != null)
+                      InfoCard(
+                        text: 'Name: ${userDetails.name}',
+                        icon: Icons.person,
+                      ),
+
+                    SizedBox(height: 1),
+                    if (userDetails.location != null)
+                      InfoCard(
+                        icon: Icons.location_on,
+                        text: 'Location: ${userDetails.location}',
+                      ),
+                    SizedBox(height: 1),
+
+                    InfoCard(
+                      text: 'Public Repositories: ${userDetails.publicRepos}',
+                      icon: Icons.storage,
                     ),
 
+                    SizedBox(height: 1),
 
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Username: ${userDetails.login}',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  if (userDetails.name != null)
-                    Text(
-                      'Name: ${userDetails.name}',
-                      style: TextStyle(fontSize: 16),
+                    InfoCard(
+                      text: 'Followers: ${userDetails.followers}',
+                      icon: Icons.group,
                     ),
-                  Divider(
-                    thickness: 1.0,
-                    color: Colors.grey,
-                    height: 10.0,
-                  ),
-                  if (userDetails.location != null)
-                    Text(
-                      'Location: ${userDetails.location}',
-                      style: TextStyle(fontSize: 16),
+                    SizedBox(height: 1),
+
+                    InfoCard(
+                      text: 'Following: ${userDetails.following}',
+                      icon: Icons.person_add,
                     ),
+                    SizedBox(height: 1),
 
-                  Divider(
-                    thickness: 1.0,
-                    color: Colors.grey,
-                    height: 10.0,
-                  ),
-                  Text(
-                    'Public Repositories: ${userDetails.publicRepos}',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                    if (userDetails.bio != null)
+                      InfoCard(
+                        text: 'Bio: ${userDetails.bio}',
+                        icon: Icons.info,
+                      ),
+                    SizedBox(height: 1),
 
-                  Divider(
-                    thickness: 1.0,
-                    color: Colors.grey,
-                    height: 10.0,
-                  ),
-                  Text(
-                    'Followers: ${userDetails.followers}',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                    if (userDetails.email != null)
+                      InfoCard(
+                        text: 'Email: ${userDetails.email}',
+                        icon: Icons.email,
+                      ),
+                    SizedBox(height: 1),
 
-                  Divider(
-                    thickness: 1.0,
-                    color: Colors.grey,
-                    height: 10.0,
-                  ),
-                  Text(
-                    'Following: ${userDetails.following}',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                    if (userDetails.company != null)
+                      InfoCard(
+                        text: 'Company: ${userDetails.company}',
+                        icon: Icons.business,
+                      ),
+                    SizedBox(height: 1),
 
-                  Divider(
-                    thickness: 1.0,
-                    color: Colors.grey,
-                    height: 10.0,
-                  ),
-                  if (userDetails.bio != null)
-                    Text(
-                      'Bio: ${userDetails.bio}',
-                      style: TextStyle(fontSize: 16),
+                    if (userDetails.blog != null)
+                      InfoCard(
+                        text: 'Blog: ${userDetails.blog}',
+                        icon: Icons.description,
+                      ),
+
+                    SizedBox(height: 1),
+
+                    InfoCard(
+                      text: 'Profile URL:',
+                      icon: Icons.link,
                     ),
-
-                  if (userDetails.email != null)
-                    Text(
-                      'Email: ${userDetails.email}',
-                      style: TextStyle(fontSize: 16),
+                    InkWell(
+                      child: Text(
+                        userDetails.htmlUrl,
+                        style: TextStyle(fontSize: 16, color: Colors.blue),
+                      ),
+                      onTap: () {
+                        // Handle URL tap if necessary
+                      },
                     ),
-
-                  Divider(
-                    thickness: 1.0,
-                    color: Colors.grey,
-                    height: 10.0,
-                  ),
-
-                  if (userDetails.company != null)
-                    Text(
-                      'Company: ${userDetails.company}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-
-                  Divider(
-                    thickness: 1.0,
-                    color: Colors.grey,
-                    height: 10.0,
-                  ),
-
-                  if (userDetails.blog != null)
-                    Text(
-                      'Blog: ${userDetails.blog}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-
-                  Divider(
-                    thickness: 1.0,
-                    color: Colors.grey,
-                    height: 10.0,
-                  ),
-
-
-                  SizedBox(height: 16),
-                  Text(
-                    'Profile URL:',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  InkWell(
-                    child: Text(
-                      userDetails.htmlUrl,
-                      style: TextStyle(fontSize: 16, color: Colors.blue),
-                    ),
-                    onTap: () {
-                      // Handle URL tap if necessary
-                    },
-                  ),
-
-
-                  Divider( // Creates a horizontal line
-                    thickness: 1.0, // Adjust thickness as needed
-                    color: Colors.grey, // Change color if desired
-                    height: 10.0, // Controls the space occupied by the divider
-                  )
-                ],
+                  ],
+                ),
               ),
             );
+
           }
         },
+      ),
+    );
+  }
+}
+class InfoCard extends StatelessWidget {
+  final IconData icon;
+  final String text;
+
+  InfoCard({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(text),
       ),
     );
   }

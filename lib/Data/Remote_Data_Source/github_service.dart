@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 class GitHubService {
   static const String baseUrl = 'https://api.github.com/search/users';
 
-  Future<List<dynamic>> fetchUsersByLocation(String location) async {
-    final response = await http.get(Uri.parse('$baseUrl?q=location:$location'));
+  Future<List<dynamic>> fetchUsersByLocation(String location,{int page = 1, int perPage = 30}) async {
+    final response = await http.get(Uri.parse('$baseUrl?q=location:$location &page=$page&per_page=$perPage'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -25,13 +25,13 @@ class GitHubService {
     }
   }
 
+
   Future<List<dynamic>> fetchUsersByFilter({
     required String name,
     int minFollowers = 0,
     int minRepos = 0,
   }) async {
-    // Replace with your actual API call with filters
-    final url = 'https://api.github.com/search/users?q=$name&followers:>=$minFollowers&repos:>=$minRepos';
+    final url = 'https://api.github.com/search/users?q=$name+followers:>=$minFollowers+repos:>=$minRepos';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -41,6 +41,7 @@ class GitHubService {
       throw Exception('Failed to load users');
     }
   }
+
 
 
 }

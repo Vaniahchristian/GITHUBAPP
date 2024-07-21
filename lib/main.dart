@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'Screens/home.dart';
-import 'Screens/splash.dart';
-
-import 'Screens/user_details.dart';
-import 'Models/github_user.dart';
+import 'Presentation/Screens/home.dart';
+import 'Presentation/Screens/splash.dart';
+import 'Presentation/Screens/user_details.dart';
+import 'Data/Models/github_user.dart';
 
 
 void main() {

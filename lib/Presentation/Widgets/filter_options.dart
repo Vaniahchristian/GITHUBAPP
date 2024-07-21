@@ -26,7 +26,7 @@ class FilterOptions extends StatelessWidget {
               controller: minFollowersController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: 'Min Followers',
+                labelText: 'Minimum Followers',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -35,21 +35,32 @@ class FilterOptions extends StatelessWidget {
               controller: minReposController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: 'Min Repositories',
+                labelText: 'Minimum Repositories',
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                final filterOptions = {
-                  'name': nameController.text,
-                  'minFollowers': int.tryParse(minFollowersController.text) ?? 0,
-                  'minRepos': int.tryParse(minReposController.text) ?? 0,
-                };
-                Navigator.pop(context, filterOptions);
-              },
-              child: Text('Apply Filters'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final filterOptions = {
+                      'name': nameController.text,
+                      'minFollowers': int.tryParse(minFollowersController.text) ?? 0,
+                      'minRepos': int.tryParse(minReposController.text) ?? 0,
+                    };
+                    Navigator.pop(context, filterOptions);
+                  },
+                  child: Text('Apply Filters'),
+                ),
+              ],
             ),
           ],
         ),

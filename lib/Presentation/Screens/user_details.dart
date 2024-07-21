@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../Data/Models/github_user.dart';
 import '../../Data/Remote_Data_Source/github_service.dart';
 
@@ -22,6 +23,14 @@ class UserDetails extends StatelessWidget {
     ''';
 
     Share.share(text);
+  }
+
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -148,9 +157,7 @@ class UserDetails extends StatelessWidget {
                                     userDetails.htmlUrl,
                                     style: TextStyle(fontSize: 16, color: Colors.blue),
                                   ),
-                                  onTap: () {
-                                    // Handle URL tap if necessary
-                                  },
+                                  onTap: () => _launchURL(userDetails.htmlUrl),
                                 ),
                               ),
                             ],

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class GitHubService {
   static const String baseUrl = 'https://api.github.com/search/users';

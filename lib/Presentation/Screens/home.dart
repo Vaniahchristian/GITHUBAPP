@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../Data/Models/github_user.dart';
 import '../../Data/Remote_Data_Source/github_service.dart';
@@ -40,32 +41,38 @@ class _HomepageState extends State<Homepage> {
       _fetchPage(pageKey);
     });
     _connectivityStream.listen((ConnectivityResult result) {
-      setState(() {
-        _connectionStatus = result;
-        _isNoInternet = _connectionStatus == ConnectivityResult.none;
-        if (!_isNoInternet) {
-          _pagingController.refresh();
-        }
-      });
-      if (_isNoInternet) {
-        _openSettings();
-      }
+      _checkConnection();
     });
   }
 
   Future<void> _checkConnection() async {
     ConnectivityResult result = await _connectivity.checkConnectivity();
+    bool isConnected = result != ConnectivityResult.none;
+
+    // Perform an actual network request to verify internet connectivity
+    if (isConnected) {
+      try {
+        final response = await http.get(Uri.parse('https://www.google.com'));
+        isConnected = response.statusCode == 200;
+      } catch (e) {
+        isConnected = false;
+      }
+    }
+
     setState(() {
       _connectionStatus = result;
-      _isNoInternet = _connectionStatus == ConnectivityResult.none;
+      _isNoInternet = !isConnected;
     });
+
+    if (!_isNoInternet) {
+      _pagingController.refresh();
+    }
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    if (_connectionStatus == ConnectivityResult.none) {
+    if (_isNoInternet) {
       setState(() {
         _pagingController.error = "No internet connection.";
-        _isNoInternet = true;
       });
       return;
     }
@@ -121,9 +128,12 @@ class _HomepageState extends State<Homepage> {
           'GitHub Users App',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Color(0xFF000080),
+        backgroundColor: Color(0xFF36827F),
         centerTitle: true,
       ),
+
+
+
       body: _isNoInternet
           ? Center(
         child: Column(
@@ -168,7 +178,8 @@ class _HomepageState extends State<Homepage> {
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(12.0),
                         suffixIcon: IconButton(
-                          icon: Icon(Icons.search, color: Color(0xFF26C6DA)),
+                          icon: Icon(Icons.search,
+                              color: Color(0xFF26C6DA)),
                           onPressed: () {
                             setState(() {
                               _isFiltered = false;
@@ -182,7 +193,8 @@ class _HomepageState extends State<Homepage> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.filter_list, color: Color(0xFF26C6DA)),
+                    icon: Icon(Icons.filter_list,
+                        color: Color(0xFF26C6DA)),
                     onPressed: () async {
                       _showFilterOptions(context);
                     },
@@ -198,24 +210,30 @@ class _HomepageState extends State<Homepage> {
                 itemBuilder: (context, index) {
                   final user = _filteredUsers[index];
                   return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    margin:
+                    EdgeInsets.symmetric(vertical: 8.0),
                     elevation: 4.0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius:
+                      BorderRadius.circular(10.0),
                     ),
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: NetworkImage(user.avatarUrl),
+                        backgroundImage:
+                        NetworkImage(user.avatarUrl),
                       ),
                       title: Text(user.login,
-                          style: TextStyle(color: Color(0xFF212121))),
+                          style: TextStyle(
+                              color: Color(0xFF212121))),
                       subtitle: Text(user.htmlUrl,
-                          style: TextStyle(color: Color(0xFF757575))),
+                          style: TextStyle(
+                              color: Color(0xFF757575))),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => UserDetails(user: user),
+                            builder: (context) =>
+                                UserDetails(user: user),
                           ),
                         );
                       },
@@ -223,41 +241,54 @@ class _HomepageState extends State<Homepage> {
                   );
                 },
               )
+
+              //Consumer<UserProvider>
                   : PagedListView<int, GitHubUser>(
                 pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<GitHubUser>(
+                builderDelegate:
+                PagedChildBuilderDelegate<GitHubUser>(
                   itemBuilder: (context, item, index) => Card(
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    margin:
+                    EdgeInsets.symmetric(vertical: 8.0),
                     elevation: 4.0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius:
+                      BorderRadius.circular(10.0),
                     ),
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: NetworkImage(item.avatarUrl),
+                        backgroundImage:
+                        NetworkImage(item.avatarUrl),
                       ),
                       title: Text(item.login,
-                          style: TextStyle(color: Color(0xFF212121))),
+                          style: TextStyle(
+                              color: Color(0xFF212121))),
                       subtitle: Text(item.htmlUrl,
-                          style: TextStyle(color: Color(0xFF757575))),
+                          style: TextStyle(
+                              color: Color(0xFF757575))),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => UserDetails(user: item),
+                            builder: (context) =>
+                                UserDetails(user: item),
                           ),
                         );
                       },
                     ),
                   ),
-                  firstPageErrorIndicatorBuilder: (context) => Center(
-                    child: Text('No users found',
-                        style: TextStyle(color: Color(0xFF757575))),
-                  ),
-                  noItemsFoundIndicatorBuilder: (context) => Center(
-                    child: Text('No users found',
-                        style: TextStyle(color: Color(0xFF757575))),
-                  ),
+                  firstPageErrorIndicatorBuilder: (context) =>
+                      Center(
+                        child: Text('No users found',
+                            style: TextStyle(
+                                color: Color(0xFF757575))),
+                      ),
+                  noItemsFoundIndicatorBuilder: (context) =>
+                      Center(
+                        child: Text('No users found',
+                            style: TextStyle(
+                                color: Color(0xFF757575))),
+                      ),
                 ),
               ),
             ),
@@ -269,7 +300,8 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _showFilterOptions(BuildContext context) async {
-    final filterOptions = await showModalBottomSheet<Map<String, dynamic>>(
+    final filterOptions =
+    await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
       builder: (context) {

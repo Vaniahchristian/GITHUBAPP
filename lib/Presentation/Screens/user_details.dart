@@ -107,7 +107,6 @@ class UserDetails extends StatelessWidget {
                                 _buildStatItem(Icons.person_add, "Following", userDetails.following.toString()),
                               ],
                             ),
-
                           ],
                         ),
                       ),
@@ -121,27 +120,20 @@ class UserDetails extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Card(
-                            elevation: 4, // You can adjust the elevation to make the card more or less prominent
-                            margin: EdgeInsets.all(8), // Margin around the card
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5), // You can adjust the corner radius
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(16), // Padding inside the card
-                              child: userDetails.bio != null
-                                  ? Text(
+                          // Bio
+                          if (userDetails.bio != null && userDetails.bio!.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16.0),
+                              child: Text(
                                 userDetails.bio!,
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black,
                                 ),
                                 textAlign: TextAlign.center,
-                              )
-                                  : SizedBox.shrink(), // Use SizedBox.shrink() if bio is null to avoid rendering an empty space
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 16),
+                          // Additional Info
                           _buildInfoRow(Icons.location_on, userDetails.location),
                           _buildInfoRow(Icons.email, userDetails.email),
                           _buildInfoRow(Icons.business, userDetails.company),

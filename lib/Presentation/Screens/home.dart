@@ -4,12 +4,11 @@ import 'package:android_intent_plus/flag.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import '../../Data/Models/github_user.dart';
-import '../../Data/Remote_Data_Source/github_service.dart';
+import 'package:provider/provider.dart';
+import '../../Providers/user_provider.dart';
+import '../../data/models/github_user.dart';
 import 'user_details.dart';
-import '../Widgets/filter_options.dart';
-
-GitHubService _githubService = GitHubService();
+import '../widgets/filter_options.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -77,20 +76,18 @@ class _HomepageState extends State<Homepage> {
       return;
     }
     try {
-      final newUsers = await _githubService.fetchUsersByLocation(
-        _searchController.text,
-        page: pageKey,
-        perPage: _perPage,
-      );
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      await userProvider.fetchUsers(_searchController.text);
+      final newUsers = userProvider.users;
       final isLastPage = newUsers.length < _perPage;
       if (isLastPage) {
         _pagingController.appendLastPage(
-          newUsers.map((json) => GitHubUser.fromJson(json)).toList(),
+          newUsers.map((user) => GitHubUser.fromJson(user)).toList(),
         );
       } else {
         final nextPageKey = pageKey + 1;
         _pagingController.appendPage(
-          newUsers.map((json) => GitHubUser.fromJson(json)).toList(),
+          newUsers.map((user) => GitHubUser.fromJson(user)).toList(),
           nextPageKey,
         );
       }
@@ -131,16 +128,12 @@ class _HomepageState extends State<Homepage> {
         backgroundColor: Color(0xFF36827F),
         centerTitle: true,
       ),
-
-
-
       body: _isNoInternet
           ? Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('No internet connection',
-                style: TextStyle(color: Color(0xFF757575))),
+            Text('No internet connection', style: TextStyle(color: Color(0xFF757575))),
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: _openSettings,
@@ -178,8 +171,7 @@ class _HomepageState extends State<Homepage> {
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(12.0),
                         suffixIcon: IconButton(
-                          icon: Icon(Icons.search,
-                              color: Color(0xFF26C6DA)),
+                          icon: Icon(Icons.search, color: Color(0xFF26C6DA)),
                           onPressed: () {
                             setState(() {
                               _isFiltered = false;
@@ -193,8 +185,7 @@ class _HomepageState extends State<Homepage> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.filter_list,
-                        color: Color(0xFF26C6DA)),
+                    icon: Icon(Icons.filter_list, color: Color(0xFF26C6DA)),
                     onPressed: () async {
                       _showFilterOptions(context);
                     },
@@ -210,86 +201,65 @@ class _HomepageState extends State<Homepage> {
                 itemBuilder: (context, index) {
                   final user = _filteredUsers[index];
                   return Card(
-                    margin:
-                    EdgeInsets.symmetric(vertical: 8.0),
+                    margin: EdgeInsets.symmetric(vertical: 8.0),
                     elevation: 4.0,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundImage:
-                        NetworkImage(user.avatarUrl),
+                        backgroundImage: NetworkImage(user.avatarUrl),
                       ),
-                      title: Text(user.login,
-                          style: TextStyle(
-                              color: Color(0xFF212121))),
-                      subtitle: Text(user.htmlUrl,
-                          style: TextStyle(
-                              color: Color(0xFF757575))),
+                      title: Text(user.login, style: TextStyle(color: Color(0xFF212121))),
+                      subtitle: Text(user.htmlUrl, style: TextStyle(color: Color(0xFF757575))),
                       onTap: () {
-                        Navigator.push(
+                       /* Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                UserDetails(user: user),
+                            builder: (context) => UserDetails(user: user),
                           ),
-                        );
+                        );*/
                       },
                     ),
                   );
                 },
               )
-
-              //Consumer<UserProvider>
-                  : PagedListView<int, GitHubUser>(
-                pagingController: _pagingController,
-                builderDelegate:
-                PagedChildBuilderDelegate<GitHubUser>(
-                  itemBuilder: (context, item, index) => Card(
-                    margin:
-                    EdgeInsets.symmetric(vertical: 8.0),
-                    elevation: 4.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(10.0),
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage:
-                        NetworkImage(item.avatarUrl),
-                      ),
-                      title: Text(item.login,
-                          style: TextStyle(
-                              color: Color(0xFF212121))),
-                      subtitle: Text(item.htmlUrl,
-                          style: TextStyle(
-                              color: Color(0xFF757575))),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                UserDetails(user: item),
+                  : Consumer<UserProvider>(
+                builder: (context, userProvider, child) {
+                  return PagedListView<int, GitHubUser>(
+                    pagingController: _pagingController,
+                    builderDelegate: PagedChildBuilderDelegate<GitHubUser>(
+                      itemBuilder: (context, item, index) => Card(
+                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        elevation: 4.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(item.avatarUrl),
                           ),
-                        );
-                      },
+                          title: Text(item.login, style: TextStyle(color: Color(0xFF212121))),
+                          subtitle: Text(item.htmlUrl, style: TextStyle(color: Color(0xFF757575))),
+                          onTap: () {
+                           /* Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UserDetails(user: item),
+                              ),
+                            );*/
+                          },
+                        ),
+                      ),
+                      firstPageErrorIndicatorBuilder: (context) => Center(
+                        child: Text('No users found', style: TextStyle(color: Color(0xFF757575))),
+                      ),
+                      noItemsFoundIndicatorBuilder: (context) => Center(
+                        child: Text('No users found', style: TextStyle(color: Color(0xFF757575))),
+                      ),
                     ),
-                  ),
-                  firstPageErrorIndicatorBuilder: (context) =>
-                      Center(
-                        child: Text('No users found',
-                            style: TextStyle(
-                                color: Color(0xFF757575))),
-                      ),
-                  noItemsFoundIndicatorBuilder: (context) =>
-                      Center(
-                        child: Text('No users found',
-                            style: TextStyle(
-                                color: Color(0xFF757575))),
-                      ),
-                ),
+                  );
+                },
               ),
             ),
           ],
@@ -300,8 +270,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   void _showFilterOptions(BuildContext context) async {
-    final filterOptions =
-    await showModalBottomSheet<Map<String, dynamic>>(
+    final filterOptions = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
       builder: (context) {
@@ -317,17 +286,17 @@ class _HomepageState extends State<Homepage> {
       },
     );
 
-    if (filterOptions != null) {
-      final filteredUsers = await _githubService.fetchUsersByFilter(
-        name: filterOptions['name'],
-        minFollowers: filterOptions['minFollowers'],
-        minRepos: filterOptions['minRepos'],
+    /*if (filterOptions != null) {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final filteredUsers = await userProvider.getUsersByFilter(
+        filterOptions['name'],
+        filterOptions['minFollowers'],
+        filterOptions['minRepos'],
       );
       setState(() {
-        _filteredUsers =
-            filteredUsers.map((json) => GitHubUser.fromJson(json)).toList();
+        _filteredUsers = filteredUsers.map((user) => GitHubUser.fromJson(user)).toList();
         _isFiltered = true;
       });
-    }
+    }*/
   }
 }

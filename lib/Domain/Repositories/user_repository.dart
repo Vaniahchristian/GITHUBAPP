@@ -6,6 +6,6 @@ import 'package:http/http.dart' as http;
 import '../Entities/user.dart';
 
 abstract class UserRepository {
-  Future<List<User>> getUsersByLocation(String location);
+  Future<List<dynamic>> getUsers(String location);
 }
 

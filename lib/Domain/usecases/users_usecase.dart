@@ -1,4 +1,4 @@
-// lib/domain/usecases/get_users_by_location.dart
+// lib/domain/usecases/users_usecase.dart
 
 
 import '../Entities/user.dart';
@@ -9,8 +9,8 @@ class GetUsersByLocation {
 
   GetUsersByLocation(this.repository);
 
-  Future<List<User>> call(String location) async {
-    return await repository.getUsersByLocation(location);
+  Future<List<dynamic>> call(String location) async {
+    return await repository.getUsers(location);
   }
 }
 

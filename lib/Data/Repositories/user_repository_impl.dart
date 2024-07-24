@@ -11,7 +11,7 @@ class UserRepositoryImpl implements UserRepository {
   UserRepositoryImpl({required this.githubService});
 
   @override
-  Future<List<User>> getUsersByLocation(String location) async {
-    return await githubService.getUsersByLocation(location);
+  Future<List<dynamic>> getUsers(String location) async {
+    return await githubService.fetchUsersByLocation(location);
   }
 }

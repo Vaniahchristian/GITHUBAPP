@@ -1,12 +1,12 @@
 // lib/presentation/providers/user_provider.dart
 import 'package:flutter/material.dart';
 import '../Domain/Entities/user.dart';
-import '../Domain/usecases/get_users_by_location.dart';
+import '../Domain/usecases/users_usecase.dart';
 
 class UserProvider with ChangeNotifier {
   final GetUsersByLocation getUsersByLocation;
-  List<User> _users = [];
-  List<User> get users => _users;
+  List<dynamic> _users = [];
+  List<dynamic> get users => _users;
 
   UserProvider({required this.getUsersByLocation});
 

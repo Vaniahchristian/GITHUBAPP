@@ -39,6 +39,7 @@ class GitHubService {
     required String name,
     int minFollowers = 0,
     int minRepos = 0,
+
   }) async {
     final url = 'https://api.github.com/search/users?q=$name+followers:>=$minFollowers+repos:>=$minRepos';
     final response = await http.get(Uri.parse(url));
@@ -51,7 +52,7 @@ class GitHubService {
     }
   }
 
-  getUsersByLocation(String location) {}
+
 
   
 

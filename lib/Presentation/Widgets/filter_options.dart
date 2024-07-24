@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class FilterOptions extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController minFollowersController = TextEditingController();
-  final TextEditingController minReposController = TextEditingController();
+  final TextEditingController FollowersController = TextEditingController();
+  final TextEditingController ReposController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +37,10 @@ class FilterOptions extends StatelessWidget {
             SizedBox(height: 10),
             // Minimum Followers Field
             TextField(
-              controller: minFollowersController,
+              controller: FollowersController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: 'Minimum Followers',
+                labelText: 'Followers',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.people),
               ),
@@ -48,10 +48,10 @@ class FilterOptions extends StatelessWidget {
             SizedBox(height: 10),
             // Minimum Repositories Field
             TextField(
-              controller: minReposController,
+              controller: ReposController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: 'Minimum Repositories',
+                labelText: 'Repositories',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.storage),
               ),
@@ -75,8 +75,8 @@ class FilterOptions extends StatelessWidget {
                   onPressed: () {
                     final filterOptions = {
                       'name': nameController.text,
-                      'minFollowers': int.tryParse(minFollowersController.text) ?? 0,
-                      'minRepos': int.tryParse(minReposController.text) ?? 0,
+                      'minFollowers': int.tryParse(FollowersController.text) ?? 0,
+                      'minRepos': int.tryParse(ReposController.text) ?? 0,
                     };
                     Navigator.pop(context, filterOptions);
                   },

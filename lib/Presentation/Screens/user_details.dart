@@ -1,14 +1,156 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 import '../../Data/Models/github_user.dart';
-import '../../Data/Remote_Data_Source/github_service.dart';
+import '../../Providers/details_provider.dart';
+
 
 class UserDetails extends StatelessWidget {
-  final GitHubUser user;
+  final String username;
 
-  UserDetails({required this.user});
+  UserDetails({required this.username});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Consumer<DetailsProvider>(
+        builder: (context, detailsProvider, child) {
+          return FutureBuilder<void>(
+            future: detailsProvider.fetchUserDetails(username),
+            builder: (context, snapshot) {
+              if (detailsProvider.isLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (detailsProvider.errorMessage != null) {
+                return Center(child: Text('Error: ${detailsProvider.errorMessage}'));
+              } else if (detailsProvider.userDetail == null) {
+                return Center(child: Text('No details found'));
+              } else {
+                final userDetails = detailsProvider.userDetail!;
+
+                return Column(
+                  children: [
+                    Container(
+                      color: Color(0xFF36827F),
+                      child: Column(
+                        children: [
+                          AppBar(
+                            toolbarHeight: 60,
+                            title: Center(
+                              child: Text(
+                                userDetails.login,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            iconTheme: IconThemeData(color: Colors.white),
+                            actions: [
+                              IconButton(
+                                icon: Icon(Icons.share),
+                                onPressed: () => _shareProfile(userDetails),
+                                color: Colors.white,
+                              ),
+                            ],
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(userDetails.avatarUrl),
+                                    radius: 50,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                if (userDetails.name != null)
+                                  Text(
+                                    userDetails.name!,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    _buildStatItem(Icons.folder, "Repositories", userDetails.publicRepos.toString()),
+                                    _buildStatItem(Icons.group, "Followers", userDetails.followers.toString()),
+                                    _buildStatItem(Icons.person_add, "Following", userDetails.following.toString()),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Card(
+                                elevation: 4,
+                                margin: EdgeInsets.all(8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: userDetails.bio != null
+                                      ? Text(
+                                    userDetails.bio!,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )
+                                      : SizedBox.shrink(),
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              _buildInfoRow(Icons.location_on, userDetails.location),
+                              _buildInfoRow(Icons.email, userDetails.email),
+                              _buildInfoRow(Icons.business, userDetails.company),
+                              _buildInfoRow(Icons.description, userDetails.blog),
+                              SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Icon(Icons.link, color: Colors.grey),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: InkWell(
+                                      child: Text(
+                                        userDetails.htmlUrl,
+                                        style: TextStyle(fontSize: 16, color: Colors.blue),
+                                      ),
+                                      onTap: () {
+                                        // Handle URL tap if necessary
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          );
+        },
+      ),
+    );
+  }
 
   void _shareProfile(GitHubUser user) {
     final String text = '''
@@ -25,159 +167,17 @@ class UserDetails extends StatelessWidget {
     Share.share(text);
   }
 
-  Future<void> _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    GitHubService _githubService = GitHubService();
-
-    return Scaffold(
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: _githubService.fetchUserDetails(user.login),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
-            return Center(child: Text('No details found'));
-          } else {
-            final userDetails = GitHubUser.fromJson(snapshot.data!);
-
-            return Column(
-              children: [
-                Container(
-                  color: Color(0xFF36827F), // Background color for AppBar and container
-                  child: Column(
-                    children: [
-                      AppBar(
-                        toolbarHeight: 60,
-                        title: Center(
-                          child: Text(
-                            user.login,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        iconTheme: IconThemeData(color: Colors.white),
-                        actions: [
-                          IconButton(
-                            icon: Icon(Icons.share),
-                            onPressed: () => _shareProfile(user),
-                            color: Colors.white,
-                          ),
-                        ],
-                        backgroundColor: Colors.transparent, // Make AppBar background transparent
-                        elevation: 0, // Remove shadow
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(userDetails.avatarUrl),
-                                radius: 50,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            // Removed userDetails.login from here
-                            SizedBox(height: 4),
-                            if (userDetails.name != null)
-                              Text(
-                                userDetails.name!,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white, // Text color
-                                ),
-                              ),
-                            SizedBox(height: 16),
-                            // Row with Icons and Text
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                _buildStatItem(Icons.folder, "Repositories", userDetails.publicRepos.toString()),
-                                _buildStatItem(Icons.group, "Followers", userDetails.followers.toString()),
-                                _buildStatItem(Icons.person_add, "Following", userDetails.following.toString()),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // Bio
-                          if (userDetails.bio != null && userDetails.bio!.isNotEmpty)
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16.0),
-                              child: Text(
-                                userDetails.bio!,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          // Additional Info
-                          _buildInfoRow(Icons.location_on, userDetails.location),
-                          _buildInfoRow(Icons.email, userDetails.email),
-                          _buildInfoRow(Icons.business, userDetails.company),
-                          _buildInfoRow(Icons.description, userDetails.blog),
-                          SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Icon(Icons.link, color: Colors.grey),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: InkWell(
-                                  child: Text(
-                                    userDetails.htmlUrl,
-                                    style: TextStyle(fontSize: 16, color: Colors.blue),
-                                  ),
-                                  onTap: () => _launchURL(userDetails.htmlUrl),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
-    );
-  }
-
   Widget _buildStatItem(IconData icon, String label, String value) {
     return Column(
       children: [
-        Icon(icon, size: 24, color: Colors.white), // Icon color
+        Icon(icon, size: 24, color: Colors.white),
         SizedBox(height: 8),
         Text(
           value,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.white, // Text color
+            color: Colors.white,
           ),
         ),
         SizedBox(height: 4),
@@ -185,7 +185,7 @@ class UserDetails extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white, // Text color
+            color: Colors.white,
           ),
         ),
       ],

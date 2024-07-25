@@ -1,7 +1,4 @@
-// lib/domain/usecases/users_usecase.dart
 
-
-import '../Entities/user.dart';
 import '../Repositories/user_repository.dart';
 
 class GetUsersByLocation {

@@ -8,7 +8,7 @@ import '../Models/github_user.dart';
 class GitHubService {
   static const String baseUrl = 'https://api.github.com/search/users';
 
-  Future<List<User>> fetchUsersByLocation(String location,
+  Future<List<dynamic>> fetchUsersByLocation(String location,
       {int page = 1, int perPage = 30}) async {
     final response = await http.get(Uri.parse(
         '$baseUrl?q=location:$location &page=$page&per_page=$perPage'));

@@ -213,12 +213,12 @@ class _HomepageState extends State<Homepage> {
                       title: Text(user.login, style: TextStyle(color: Color(0xFF212121))),
                       subtitle: Text(user.htmlUrl, style: TextStyle(color: Color(0xFF757575))),
                       onTap: () {
-                       /* Navigator.push(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => UserDetails(user: user),
+                            builder: (context) => UserDetails(username: user.login),
                           ),
-                        );*/
+                        );
                       },
                     ),
                   );
@@ -242,12 +242,12 @@ class _HomepageState extends State<Homepage> {
                           title: Text(item.login, style: TextStyle(color: Color(0xFF212121))),
                           subtitle: Text(item.htmlUrl, style: TextStyle(color: Color(0xFF757575))),
                           onTap: () {
-                           /* Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => UserDetails(user: item),
+                                builder: (context) => UserDetails(username: item.login),
                               ),
-                            );*/
+                            );
                           },
                         ),
                       ),
@@ -286,7 +286,7 @@ class _HomepageState extends State<Homepage> {
       },
     );
 
-    /*if (filterOptions != null) {
+   /* if (filterOptions != null) {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final filteredUsers = await userProvider.getUsersByFilter(
         filterOptions['name'],
@@ -294,7 +294,7 @@ class _HomepageState extends State<Homepage> {
         filterOptions['minRepos'],
       );
       setState(() {
-        _filteredUsers = filteredUsers.map((user) => GitHubUser.fromJson(user)).toList();
+        _filteredUsers = filteredUsers;
         _isFiltered = true;
       });
     }*/

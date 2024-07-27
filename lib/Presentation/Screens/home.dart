@@ -5,8 +5,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
+import '../../Data/Models/github_user_model.dart';
 import '../../Providers/user_provider.dart';
-import '../../data/models/github_user.dart';
 import 'user_details.dart';
 import '../widgets/filter_options.dart';
 
@@ -17,16 +17,16 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final TextEditingController _searchController = TextEditingController();
-  final PagingController<int, GitHubUser> _pagingController = PagingController(
+  final PagingController<int, GitHubUserModel> _pagingController = PagingController(
     firstPageKey: 1,
   );
 
-  final int _perPage = 10;
+  final int _perPage = 30; // Adjust perPage as needed
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   late Stream<ConnectivityResult> _connectivityStream;
   late Connectivity _connectivity;
 
-  List<GitHubUser> _filteredUsers = [];
+  List<GitHubUserModel> _filteredUsers = [];
   bool _isFiltered = false;
   bool _isNoInternet = false;
 
@@ -77,19 +77,14 @@ class _HomepageState extends State<Homepage> {
     }
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      await userProvider.fetchUsers(_searchController.text);
+      await userProvider.fetchUsersByLocation(_searchController.text);
       final newUsers = userProvider.users;
       final isLastPage = newUsers.length < _perPage;
       if (isLastPage) {
-        _pagingController.appendLastPage(
-          newUsers.map((user) => GitHubUser.fromJson(user)).toList(),
-        );
+        _pagingController.appendLastPage(newUsers);
       } else {
         final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(
-          newUsers.map((user) => GitHubUser.fromJson(user)).toList(),
-          nextPageKey,
-        );
+        _pagingController.appendPage(newUsers, nextPageKey);
       }
       setState(() {
         _isNoInternet = false;
@@ -213,11 +208,10 @@ class _HomepageState extends State<Homepage> {
                       title: Text(user.login, style: TextStyle(color: Color(0xFF212121))),
                       subtitle: Text(user.htmlUrl, style: TextStyle(color: Color(0xFF757575))),
                       onTap: () {
-                        Navigator.push(
+                        Navigator.pushNamed(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => UserDetails(username: user.login),
-                          ),
+                          '/userDetails',
+                          arguments: user,
                         );
                       },
                     ),
@@ -226,9 +220,9 @@ class _HomepageState extends State<Homepage> {
               )
                   : Consumer<UserProvider>(
                 builder: (context, userProvider, child) {
-                  return PagedListView<int, GitHubUser>(
+                  return PagedListView<int, GitHubUserModel>(
                     pagingController: _pagingController,
-                    builderDelegate: PagedChildBuilderDelegate<GitHubUser>(
+                    builderDelegate: PagedChildBuilderDelegate<GitHubUserModel>(
                       itemBuilder: (context, item, index) => Card(
                         margin: EdgeInsets.symmetric(vertical: 8.0),
                         elevation: 4.0,
@@ -242,11 +236,10 @@ class _HomepageState extends State<Homepage> {
                           title: Text(item.login, style: TextStyle(color: Color(0xFF212121))),
                           subtitle: Text(item.htmlUrl, style: TextStyle(color: Color(0xFF757575))),
                           onTap: () {
-                            Navigator.push(
+                            Navigator.pushNamed(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => UserDetails(username: item.login),
-                              ),
+                              '/userDetails',
+                              arguments: item,
                             );
                           },
                         ),
@@ -269,6 +262,7 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
+
   void _showFilterOptions(BuildContext context) async {
     final filterOptions = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
@@ -288,10 +282,11 @@ class _HomepageState extends State<Homepage> {
 
    /* if (filterOptions != null) {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final filteredUsers = await userProvider.getUsersByFilter(
-        filterOptions['name'],
-        filterOptions['minFollowers'],
-        filterOptions['minRepos'],
+      // Apply the filter options if provided
+      final filteredUsers = await userProvider.fetchUsersByFilter(
+        name: filterOptions['name'] ?? '',
+        minFollowers: filterOptions['minFollowers'] ?? 0,
+        minRepos: filterOptions['minRepos'] ?? 0,
       );
       setState(() {
         _filteredUsers = filteredUsers;

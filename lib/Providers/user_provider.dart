@@ -1,17 +1,22 @@
-// lib/presentation/providers/user_provider.dart
-import 'package:flutter/material.dart';
-import '../Domain/Entities/user.dart';
-import '../Domain/usecases/users_usecase.dart';
+import 'package:flutter/cupertino.dart';
 
-class UserProvider with ChangeNotifier {
-  final GetUsersByLocation getUsersByLocation;
-  List<dynamic> _users = [];
-  List<dynamic> get users => _users;
+import '../Data/Models/github_user_model.dart';
+import '../Data/Remote_Data_Source/github_service.dart';
 
-  UserProvider({required this.getUsersByLocation});
+class UserProvider extends ChangeNotifier {
+  final GitHubService _githubService = GitHubService();
+  List<GitHubUserModel> _users = [];
 
-  Future<void> fetchUsers(String location) async {
-    _users = await getUsersByLocation(location);
-    notifyListeners();
+  List<GitHubUserModel> get users => _users;
+
+  Future<void> fetchUsersByLocation(String location) async {
+    try {
+      final fetchedUsers = await _githubService.fetchUsersByLocation(location);
+      _users = fetchedUsers;
+      notifyListeners();
+    } catch (e) {
+      // Handle error appropriately (e.g., show a message to the user)
+      print('Failed to fetch users: $e');
+    }
   }
 }

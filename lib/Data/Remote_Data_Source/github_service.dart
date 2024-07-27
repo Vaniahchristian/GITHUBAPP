@@ -1,21 +1,22 @@
 import 'dart:convert';
-import 'package:githubapp/Domain/Entities/user.dart';
+import 'package:githubapp/Domain/Entities/github_user_entity.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
-import '../Models/github_user.dart';
+import '../Models/github_user_model.dart';
 
 class GitHubService {
   static const String baseUrl = 'https://api.github.com/search/users';
 
-  Future<List<dynamic>> fetchUsersByLocation(String location,
+  Future<List<GitHubUserModel>> fetchUsersByLocation(String location,
       {int page = 1, int perPage = 30}) async {
     final response = await http.get(Uri.parse(
-        '$baseUrl?q=location:$location &page=$page&per_page=$perPage'));
+        '$baseUrl?q=location:$location&page=$page&per_page=$perPage'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      return data['items'];
+      final List<dynamic> items = data['items'];
+      return items.map((item) => GitHubUserModel.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load users');
     }
@@ -24,7 +25,8 @@ class GitHubService {
 
 
 
-  Future<Map<String, dynamic>> fetchUserDetails(String username) async {
+
+  Future<GitHubUserModel> fetchUserDetails(String username) async {
     final response = await http.get(
         Uri.parse('https://api.github.com/users/$username'));
 
@@ -36,7 +38,7 @@ class GitHubService {
   }
 
 
-  Future<List<dynamic>> fetchUsersByFilter({
+  Future<List<GitHubUserModel>> fetchUsersByFilter({
     required String name,
     int minFollowers = 0,
     int minRepos = 0,
@@ -55,7 +57,7 @@ class GitHubService {
 
 
 
-  
+
 
 
 

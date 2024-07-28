@@ -1,7 +1,7 @@
-import '../../Domain/Entities/github_user_entity.dart';
+import '../../Domain/Entities/github_user_detail_entity.dart';
 
-class GitHubUserModel extends GitHubUserEntity {
-  const GitHubUserModel({
+class GitHubUserDetailModel extends GitHubUserDetailEntity {
+  const GitHubUserDetailModel({
     required String login,
     required String avatarUrl,
     required String htmlUrl,
@@ -29,8 +29,8 @@ class GitHubUserModel extends GitHubUserEntity {
     following: following,
   );
 
-  factory GitHubUserModel.fromJson(Map<String, dynamic> json) {
-    return GitHubUserModel(
+  factory GitHubUserDetailModel.fromJson(Map<String, dynamic> json) {
+    return GitHubUserDetailModel(
       login: json['login'] ?? '',
       avatarUrl: json['avatar_url'] ?? '',
       htmlUrl: json['html_url'] ?? '',

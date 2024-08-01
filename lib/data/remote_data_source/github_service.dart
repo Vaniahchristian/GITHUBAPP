@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../Models/github_user_detail_model.dart';
+import '../Models/gitHub_user_detail_model.dart';
 import '../Models/github_user_model.dart';
 
 class GitHubService {
@@ -27,9 +27,23 @@ class GitHubService {
     }
   }
 
-  Future<List<GitHubUserModel>> fetchUsersByFilter({required String name, int minFollowers = 0, int minRepos = 0}) async {
-    final url = '$baseUrl/search/users?q=$name+followers:>=$minFollowers+repos:>=$minRepos';
-    final response = await http.get(Uri.parse(url));
+  Future<List<GitHubUserModel>> fetchUsersByFilter({
+    required String name,
+    int? exactFollowers,
+    int? exactRepos,
+  }) async {
+    final StringBuffer query = StringBuffer();
+    query.write('$baseUrl/search/users?q=$name');
+
+    if (exactFollowers != null) {
+      query.write('+followers:>=$exactFollowers');
+    }
+
+    if (exactRepos != null) {
+      query.write('+repos:>=$exactRepos');
+    }
+
+    final response = await http.get(Uri.parse(query.toString()));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);

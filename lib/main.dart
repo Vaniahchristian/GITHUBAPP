@@ -6,7 +6,8 @@ import 'package:githubapp/Providers/user_provider.dart';
 import 'Presentation/Screens/home.dart';
 import 'Presentation/Screens/splash.dart';
 import 'Presentation/Screens/user_details.dart';
-import 'Providers/UserDetailsProvider.dart';
+import 'Providers/user_details_provider.dart';
+import 'Providers/filter_provider.dart';
 
 
 void main() {
@@ -26,7 +27,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => UserDetailsProvider(),
         ),
-        // Add other providers here if needed
+        ChangeNotifierProvider(create: (_) => FilterProvider()),
+
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

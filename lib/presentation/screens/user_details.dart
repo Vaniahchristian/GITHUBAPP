@@ -1,9 +1,13 @@
+// user_details.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../Data/Models/github_user_detail_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../Data/Models/gitHub_user_detail_model.dart';
 import '../../Data/Models/github_user_model.dart';
-import '../../Providers/UserDetailsProvider.dart';
+import '../../Providers/user_details_provider.dart';
+import '../Widgets/widget _buildInfo_row.dart';
+import '../Widgets/widget_buildStat_column.dart';
 
 class UserDetails extends StatelessWidget {
   final GitHubUserModel user;
@@ -25,10 +29,20 @@ class UserDetails extends StatelessWidget {
     Share.share(text);
   }
 
+  void _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         toolbarHeight: 60,
         title: Text(
           user.login,
@@ -52,7 +66,7 @@ class UserDetails extends StatelessWidget {
             },
           ),
         ],
-        backgroundColor: Color(0xFF000080),
+        backgroundColor: Color(0xFF36827F),
       ),
       body: FutureBuilder(
         future: Provider.of<UserDetailsProvider>(context, listen: false).fetchUserDetails(user.login),
@@ -78,17 +92,7 @@ class UserDetails extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 10),
-                        Center(
-                          child: Text(
-                            userDetails.login,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 4),
+                        SizedBox(height: 20),
                         if (userDetails.name != null)
                           Text(
                             userDetails.name!,
@@ -97,41 +101,31 @@ class UserDetails extends StatelessWidget {
                               color: Colors.grey[700],
                             ),
                           ),
+                        SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _buildStatColumn("Repositories", userDetails.publicRepos.toString()),
-                            _buildStatColumn("Followers", userDetails.followers.toString()),
-                            _buildStatColumn("Following", userDetails.following.toString()),
+                            StatColumnWidget(label: "Repositories", value: userDetails.publicRepos.toString()),
+                            StatColumnWidget(label: "Followers", value: userDetails.followers.toString()),
+                            StatColumnWidget(label: "Following", value: userDetails.following.toString()),
                           ],
                         ),
                         Divider(),
                         SizedBox(height: 8),
-                        Card(
-                          elevation: 4,
-                          margin: EdgeInsets.all(8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
+                        if (userDetails.bio != null)
+                          Text(
+                            userDetails.bio!,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.all(16),
-                            child: userDetails.bio != null
-                                ? Text(
-                              userDetails.bio!,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
-                              textAlign: TextAlign.center,
-                            )
-                                : SizedBox.shrink(),
-                          ),
-                        ),
                         SizedBox(height: 16),
-                        _buildInfoRow(Icons.location_on, userDetails.location),
-                        _buildInfoRow(Icons.email, userDetails.email),
-                        _buildInfoRow(Icons.business, userDetails.company),
-                        _buildInfoRow(Icons.description, userDetails.blog),
+                        InfoRowWidget(icon: Icons.location_on, info: userDetails.location),
+                        InfoRowWidget(icon: Icons.email, info: userDetails.email),
+                        InfoRowWidget(icon: Icons.business, info: userDetails.company),
+                        InfoRowWidget(icon: Icons.description, info: userDetails.blog),
                         SizedBox(height: 16),
                         Row(
                           children: [
@@ -144,7 +138,7 @@ class UserDetails extends StatelessWidget {
                                   style: TextStyle(fontSize: 16, color: Colors.blue),
                                 ),
                                 onTap: () {
-                                  // Handle URL tap if necessary
+                                  _launchURL(userDetails.htmlUrl);
                                 },
                               ),
                             ),
@@ -160,53 +154,6 @@ class UserDetails extends StatelessWidget {
             },
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildStatColumn(String label, String value) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInfoRow(IconData icon, String? info) {
-    if (info == null || info.isEmpty) {
-      return SizedBox.shrink();
-    }
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.grey),
-          SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              info,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

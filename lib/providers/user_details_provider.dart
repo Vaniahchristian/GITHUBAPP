@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../Data/Models/github_user_detail_model.dart';
+import '../Data/Models/gitHub_user_detail_model.dart';
 import '../Data/Remote_Data_Source/github_service.dart';
 
 

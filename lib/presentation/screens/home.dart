@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import '../../Data/Models/github_user_model.dart';
+import '../../Providers/filter_provider.dart';
 import '../../Providers/user_provider.dart';
 import 'user_details.dart';
 import '../widgets/filter_options.dart';
@@ -191,30 +192,34 @@ class _HomepageState extends State<Homepage> {
             SizedBox(height: 20),
             Expanded(
               child: _isFiltered
-                  ? ListView.builder(
-                itemCount: _filteredUsers.length,
-                itemBuilder: (context, index) {
-                  final user = _filteredUsers[index];
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
-                    elevation: 4.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(user.avatarUrl),
-                      ),
-                      title: Text(user.login, style: TextStyle(color: Color(0xFF212121))),
-                      subtitle: Text(user.htmlUrl, style: TextStyle(color: Color(0xFF757575))),
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/userDetails',
-                          arguments: user,
-                        );
-                      },
-                    ),
+                  ? Consumer<FilterProvider>(
+                builder: (context, filterProvider, child) {
+                  return ListView.builder(
+                    itemCount: filterProvider.filteredUsers.length,
+                    itemBuilder: (context, index) {
+                      final user = filterProvider.filteredUsers[index];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        elevation: 4.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(user.avatarUrl),
+                          ),
+                          title: Text(user.login, style: TextStyle(color: Color(0xFF212121))),
+                          subtitle: Text(user.htmlUrl, style: TextStyle(color: Color(0xFF757575))),
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/userDetails',
+                              arguments: user,
+                            );
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
               )
@@ -262,36 +267,22 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-
   void _showFilterOptions(BuildContext context) async {
-    final filterOptions = await showModalBottomSheet<Map<String, dynamic>>(
+    final filterOptions = await showDialog<Map<String, dynamic>>(
       context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return DraggableScrollableSheet(
-          expand: false,
-          builder: (context, scrollController) {
-            return SingleChildScrollView(
-              controller: scrollController,
-              child: FilterOptions(),
-            );
-          },
-        );
-      },
+      builder: (context) => FilterOptions(),
     );
 
-   /* if (filterOptions != null) {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      // Apply the filter options if provided
-      final filteredUsers = await userProvider.fetchUsersByFilter(
-        name: filterOptions['name'] ?? '',
-        minFollowers: filterOptions['minFollowers'] ?? 0,
-        minRepos: filterOptions['minRepos'] ?? 0,
+    if (filterOptions != null) {
+      final filterProvider = Provider.of<FilterProvider>(context, listen: false);
+      await filterProvider.fetchUsersByFilter(
+        filterOptions['name'],
+        exactFollowers: filterOptions['exactFollowers'],
+        exactRepos: filterOptions['exactRepos'],
       );
       setState(() {
-        _filteredUsers = filteredUsers;
         _isFiltered = true;
       });
-    }*/
+    }
   }
 }

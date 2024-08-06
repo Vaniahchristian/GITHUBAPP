@@ -1,17 +1,19 @@
 import 'package:flutter/cupertino.dart';
-
-import '../Data/Models/github_user_model.dart';
-import '../Data/Remote_Data_Source/github_service.dart';
+import 'package:githubapp/domain/entities/user_entity.dart';
+import '../domain/usecases/github_users_usecases.dart';
 
 class UserProvider extends ChangeNotifier {
-  final GitHubService _githubService = GitHubService();
-  List<GitHubUserModel> _users = [];
+  final fetchUsersByLocationUsecase _fetchUsersByLocationUsecase;
 
-  List<GitHubUserModel> get users => _users;
+  UserProvider(this._fetchUsersByLocationUsecase);
+
+  List<GitHubUserEntity> _users = [];
+
+  List<GitHubUserEntity> get users => _users;
 
   Future<void> fetchUsersByLocation(String location) async {
     try {
-      final fetchedUsers = await _githubService.fetchUsersByLocation(location);
+      final fetchedUsers = await _fetchUsersByLocationUsecase.call(location);
       _users = fetchedUsers;
       notifyListeners();
     } catch (e) {

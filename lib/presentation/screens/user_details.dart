@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../Data/Models/gitHub_user_detail_model.dart';
-import '../../Data/Models/github_user_model.dart';
+import '../../Domain/Entities/user_entity.dart';
 import '../../Providers/user_details_provider.dart';
+import '../../domain/entities/github_user_detail_entity.dart';
 import '../Widgets/widget _buildInfo_row.dart';
 import '../Widgets/widget_buildStat_column.dart';
 
 class UserDetails extends StatelessWidget {
-  final GitHubUserModel user;
+  final GitHubUserEntity user;
 
   UserDetails({required this.user});
 
-  void _shareProfile(GitHubUserDetailModel user) {
+  void _shareProfile(GitHubUserDetailEntity user) {
     final String text = '''
     GitHub User Profile:
     Username: ${user.login}

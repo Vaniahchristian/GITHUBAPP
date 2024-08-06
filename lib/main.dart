@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:githubapp/Data/Models/github_user_model.dart';
 import 'package:githubapp/Providers/user_provider.dart';
-
 import 'Presentation/Screens/home.dart';
 import 'Presentation/Screens/splash.dart';
 import 'Presentation/Screens/user_details.dart';

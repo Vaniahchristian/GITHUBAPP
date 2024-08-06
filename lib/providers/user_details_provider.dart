@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import '../Data/Models/gitHub_user_detail_model.dart';
-import '../Data/Remote_Data_Source/github_service.dart';
+import 'package:githubapp/domain/entities/github_user_detail_entity.dart';
+import '../domain/usecases/get_user_details.dart';
 
-
-class UserDetailsProvider with ChangeNotifier {
-  final GitHubService _gitHubService = GitHubService();
-  GitHubUserDetailModel? _userDetails;
+class UserDetailsProvider extends ChangeNotifier {
+  final FetchUserDetailsUsecase _fetchUserDetailsUsecase;
+  GitHubUserDetailEntity? _userDetails;
   bool _isLoading = false;
   String? _error;
 
-  GitHubUserDetailModel? get userDetails => _userDetails;
+  UserDetailsProvider(this._fetchUserDetailsUsecase);
+
+  GitHubUserDetailEntity? get userDetails => _userDetails;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -19,12 +20,18 @@ class UserDetailsProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      _userDetails = await _gitHubService.fetchUserDetails(username);
+      final userDetails = await _fetchUserDetailsUsecase.call(username);
+      _showUserDetails(userDetails);
     } catch (e) {
       _error = e.toString();
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void _showUserDetails(GitHubUserDetailEntity userDetails) {
+    _userDetails = userDetails;
+    notifyListeners();
   }
 }

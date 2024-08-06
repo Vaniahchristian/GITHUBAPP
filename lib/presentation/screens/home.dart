@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:githubapp/data/models/github_user_model.dart';
+import 'package:githubapp/presentation/widgets/filter_options.dart';
+import 'package:githubapp/providers/filter_provider.dart';
+import 'package:githubapp/providers/user_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
-import '../../Data/Models/github_user_model.dart';
-import '../../Providers/filter_provider.dart';
-import '../../Providers/user_provider.dart';
-import 'user_details.dart';
-import '../widgets/filter_options.dart';
+
+import '../../domain/entities/user_entity.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final TextEditingController _searchController = TextEditingController();
-  final PagingController<int, GitHubUserModel> _pagingController = PagingController(
+  final PagingController<int, GitHubUserEntity> _pagingController = PagingController(
     firstPageKey: 1,
   );
 
@@ -27,7 +28,7 @@ class _HomepageState extends State<Homepage> {
   late Stream<ConnectivityResult> _connectivityStream;
   late Connectivity _connectivity;
 
-  List<GitHubUserModel> _filteredUsers = [];
+  List<GitHubUserEntity> _filteredUsers = [];
   bool _isFiltered = false;
   bool _isNoInternet = false;
 
@@ -225,9 +226,9 @@ class _HomepageState extends State<Homepage> {
               )
                   : Consumer<UserProvider>(
                 builder: (context, userProvider, child) {
-                  return PagedListView<int, GitHubUserModel>(
+                  return PagedListView<int, GitHubUserEntity>(
                     pagingController: _pagingController,
-                    builderDelegate: PagedChildBuilderDelegate<GitHubUserModel>(
+                    builderDelegate: PagedChildBuilderDelegate<GitHubUserEntity>(
                       itemBuilder: (context, item, index) => Card(
                         margin: EdgeInsets.symmetric(vertical: 8.0),
                         elevation: 4.0,

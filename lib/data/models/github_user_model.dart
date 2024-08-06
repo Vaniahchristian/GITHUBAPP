@@ -1,4 +1,5 @@
-import '../../Domain/Entities/github_user_entity.dart';
+
+import '../../Domain/Entities/user_entity.dart';
 
 class GitHubUserModel extends GitHubUserEntity {
   const GitHubUserModel({
@@ -61,5 +62,22 @@ class GitHubUserModel extends GitHubUserEntity {
       'followers': followers,
       'following': following,
     };
+  }
+
+  GitHubUserEntity toEntity() {
+    return GitHubUserEntity(
+      login: login,
+      avatarUrl: avatarUrl,
+      htmlUrl: htmlUrl,
+      name: name,
+      company: company,
+      blog: blog,
+      location: location,
+      email: email,
+      bio: bio,
+      publicRepos: publicRepos,
+      followers: followers,
+      following: following,
+    );
   }
 }

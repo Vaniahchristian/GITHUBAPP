@@ -49,7 +49,7 @@ class FilterOptions extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                     style: TextButton.styleFrom(
-                      foregroundColor: Color(0xFF36827F),
+                      foregroundColor: const Color(0xFF36827F),
                     ),
                     child: const Text('Cancel'),
                   ),
@@ -64,7 +64,7 @@ class FilterOptions extends StatelessWidget {
                       Navigator.pop(context, filterOptions);
                     },
                     style:ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color(0xFF36827F),
+                      foregroundColor: Colors.white, backgroundColor: const Color(0xFF36827F),
 
                     ),
                     child: const Text('Search'),

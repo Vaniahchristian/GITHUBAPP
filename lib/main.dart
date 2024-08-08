@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:githubapp/presentation/providers/filter_provider.dart';
 import 'package:githubapp/presentation/providers/user_details_provider.dart';
@@ -15,11 +14,11 @@ import 'domain/usecases/filter_users_usecase.dart';
 import 'domain/usecases/github_users_usecase.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +51,8 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/splash',
         routes: {
-          '/splash': (context) => SplashScreen(),
-          '/home': (context) => Homepage(),
+          '/splash': (context) => const SplashScreen(),
+          '/home': (context) => const Homepage(),
           '/userDetails': (context) => Builder(
             builder: (context) {
               final args = ModalRoute.of(context)!.settings.arguments as GitHubUserEntity;

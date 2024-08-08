@@ -3,7 +3,6 @@ import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../domain/entities/github_user_entity.dart';
@@ -12,6 +11,8 @@ import '../providers/user_provider.dart';
 import '../widgets/filter_options.dart';
 
 class Homepage extends StatefulWidget {
+  const Homepage({super.key});
+
   @override
   _HomepageState createState() => _HomepageState();
 }
@@ -27,7 +28,7 @@ class _HomepageState extends State<Homepage> {
   late Stream<ConnectivityResult> _connectivityStream;
   late Connectivity _connectivity;
 
-  List<GitHubUserEntity> _filteredUsers = [];
+  final List<GitHubUserEntity> _filteredUsers = [];
   bool _isFiltered = false;
   bool _isNoInternet = false;
 
@@ -99,7 +100,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   Future<void> _openSettings() async {
-    final intent = AndroidIntent(
+    const intent = AndroidIntent(
       action: 'android.settings.SETTINGS',
       flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
     );
@@ -117,11 +118,11 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'GitHub Users App',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Color(0xFF36827F),
+        backgroundColor: const Color(0xFF36827F),
         centerTitle: true,
       ),
       body: _isNoInternet
@@ -129,17 +130,17 @@ class _HomepageState extends State<Homepage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('No internet connection', style: TextStyle(color: Color(0xFF757575))),
-            SizedBox(height: 10),
+            const Text('No internet connection', style: TextStyle(color: Color(0xFF757575))),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: _openSettings,
-              child: Text('Open Settings'),
+              child: const Text('Open Settings'),
             ),
           ],
         ),
       )
           : Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Container(
@@ -152,7 +153,7 @@ class _HomepageState extends State<Homepage> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 2,
                     blurRadius: 5,
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
@@ -163,11 +164,11 @@ class _HomepageState extends State<Homepage> {
                       controller: _searchController,
                       decoration: InputDecoration(
                         labelText: 'Search by location',
-                        labelStyle: TextStyle(color: Color(0xFF757575)),
+                        labelStyle: const TextStyle(color: Color(0xFF757575)),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(12.0),
+                        contentPadding: const EdgeInsets.all(12.0),
                         suffixIcon: IconButton(
-                          icon: Icon(Icons.search, color: Color(0xFF26C6DA)),
+                          icon: const Icon(Icons.search, color: Color(0xFF26C6DA)),
                           onPressed: () {
                             setState(() {
                               _isFiltered = false;
@@ -177,11 +178,11 @@ class _HomepageState extends State<Homepage> {
                           },
                         ),
                       ),
-                      cursorColor: Color(0xFF1E88E5),
+                      cursorColor: const Color(0xFF1E88E5),
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.filter_list, color: Color(0xFF26C6DA)),
+                    icon: const Icon(Icons.filter_list, color: Color(0xFF26C6DA)),
                     onPressed: () async {
                       _showFilterOptions(context);
                     },
@@ -189,7 +190,7 @@ class _HomepageState extends State<Homepage> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: _isFiltered
                   ? Consumer<FilterProvider>(
@@ -199,7 +200,7 @@ class _HomepageState extends State<Homepage> {
                     itemBuilder: (context, index) {
                       final user = filterProvider.filteredUsers[index];
                       return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
                         elevation: 4.0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -208,8 +209,8 @@ class _HomepageState extends State<Homepage> {
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(user.avatarUrl),
                           ),
-                          title: Text(user.login, style: TextStyle(color: Color(0xFF212121))),
-                          subtitle: Text(user.htmlUrl, style: TextStyle(color: Color(0xFF757575))),
+                          title: Text(user.login, style: const TextStyle(color: Color(0xFF212121))),
+                          subtitle: Text(user.htmlUrl, style: const TextStyle(color: Color(0xFF757575))),
                           onTap: () {
                             Navigator.pushNamed(
                               context,
@@ -229,7 +230,7 @@ class _HomepageState extends State<Homepage> {
                     pagingController: _pagingController,
                     builderDelegate: PagedChildBuilderDelegate<GitHubUserEntity>(
                       itemBuilder: (context, item, index) => Card(
-                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
                         elevation: 4.0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -238,8 +239,8 @@ class _HomepageState extends State<Homepage> {
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(item.avatarUrl),
                           ),
-                          title: Text(item.login, style: TextStyle(color: Color(0xFF212121))),
-                          subtitle: Text(item.htmlUrl, style: TextStyle(color: Color(0xFF757575))),
+                          title: Text(item.login, style: const TextStyle(color: Color(0xFF212121))),
+                          subtitle: Text(item.htmlUrl, style: const TextStyle(color: Color(0xFF757575))),
                           onTap: () {
                             Navigator.pushNamed(
                               context,
@@ -249,10 +250,10 @@ class _HomepageState extends State<Homepage> {
                           },
                         ),
                       ),
-                      firstPageErrorIndicatorBuilder: (context) => Center(
+                      firstPageErrorIndicatorBuilder: (context) => const Center(
                         child: Text('No users found', style: TextStyle(color: Color(0xFF757575))),
                       ),
-                      noItemsFoundIndicatorBuilder: (context) => Center(
+                      noItemsFoundIndicatorBuilder: (context) => const Center(
                         child: Text('No users found', style: TextStyle(color: Color(0xFF757575))),
                       ),
                     ),

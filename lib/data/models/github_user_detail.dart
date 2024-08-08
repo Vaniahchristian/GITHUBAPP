@@ -7,32 +7,19 @@ import '../../domain/entities/gitHub_user_detail_entity.dart';
 
 class GitHubUserDetailModel extends GitHubUserDetailEntity {
   const GitHubUserDetailModel({
-    required String login,
-    required String avatarUrl,
-    required String htmlUrl,
-    String name = '',
-    String company = '',
-    String blog = '',
-    String location = '',
-    String email = '',
-    String bio = '',
-    int publicRepos = 0,
-    int followers = 0,
-    int following = 0,
-  }) : super(
-    login: login,
-    avatarUrl: avatarUrl,
-    htmlUrl: htmlUrl,
-    name: name,
-    company: company,
-    blog: blog,
-    location: location,
-    email: email,
-    bio: bio,
-    publicRepos: publicRepos,
-    followers: followers,
-    following: following,
-  );
+    required super.login,
+    required super.avatarUrl,
+    required super.htmlUrl,
+    String super.name,
+    super.company,
+    String super.blog,
+    String super.location,
+    super.email,
+    String super.bio,
+    super.publicRepos = 0,
+    super.followers = 0,
+    super.following = 0,
+  });
 
   factory GitHubUserDetailModel.fromJson(Map<String, dynamic> json) {
     return GitHubUserDetailModel(

@@ -3,7 +3,6 @@
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../domain/entities/gitHub_user_detail_entity.dart';
@@ -15,7 +14,7 @@ import '../widgets/build_stat_column.dart';
 class UserDetails extends StatelessWidget {
   final GitHubUserEntity user;
 
-  UserDetails({required this.user});
+  const UserDetails({super.key, required this.user});
 
   void _shareProfile(GitHubUserDetailEntity user) {
     final String text = '''
@@ -49,27 +48,27 @@ class UserDetails extends StatelessWidget {
         toolbarHeight: 60,
         title: Text(
           user.login,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           Consumer<UserDetailsProvider>(
             builder: (context, provider, child) {
               if (provider.isLoading) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else if (provider.userDetails != null) {
                 return IconButton(
-                  icon: Icon(Icons.share),
+                  icon: const Icon(Icons.share),
                   onPressed: () => _shareProfile(provider.userDetails!),
                   color: Colors.white,
                 );
               } else {
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               }
             },
           ),
         ],
-        backgroundColor: Color(0xFF36827F),
+        backgroundColor: const Color(0xFF36827F),
       ),
       body: FutureBuilder(
         future: Provider.of<UserDetailsProvider>(context, listen: false).fetchUserDetails(user.login),
@@ -77,13 +76,13 @@ class UserDetails extends StatelessWidget {
           return Consumer<UserDetailsProvider>(
             builder: (context, provider, child) {
               if (provider.isLoading) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (provider.error != null) {
                 return Center(child: Text(provider.error!));
               } else if (provider.userDetails != null) {
                 final userDetails = provider.userDetails!;
                 return Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,8 +93,8 @@ class UserDetails extends StatelessWidget {
                             radius: 50,
                           ),
                         ),
-                        SizedBox(height: 10),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         if (userDetails.name != null)
                           Text(
                             userDetails.name!,
@@ -104,7 +103,7 @@ class UserDetails extends StatelessWidget {
                               color: Colors.grey[700],
                             ),
                           ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -113,32 +112,32 @@ class UserDetails extends StatelessWidget {
                             StatColumnWidget(label: "Following", value: userDetails.following.toString()),
                           ],
                         ),
-                        Divider(),
-                        SizedBox(height: 8),
+                        const Divider(),
+                        const SizedBox(height: 8),
                         if (userDetails.bio != null)
                           Text(
                             userDetails.bio!,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                             ),
                             textAlign: TextAlign.center,
                           ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         InfoRowWidget(icon: Icons.location_on, info: userDetails.location),
                         InfoRowWidget(icon: Icons.email, info: userDetails.email),
                         InfoRowWidget(icon: Icons.business, info: userDetails.company),
                         InfoRowWidget(icon: Icons.description, info: userDetails.blog),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Row(
                           children: [
-                            Icon(Icons.link, color: Colors.grey),
-                            SizedBox(width: 8),
+                            const Icon(Icons.link, color: Colors.grey),
+                            const SizedBox(width: 8),
                             Expanded(
                               child: InkWell(
                                 child: Text(
                                   userDetails.htmlUrl,
-                                  style: TextStyle(fontSize: 16, color: Colors.blue),
+                                  style: const TextStyle(fontSize: 16, color: Colors.blue),
                                 ),
                                 onTap: () {
                                   _launchURL(userDetails.htmlUrl);
@@ -152,7 +151,7 @@ class UserDetails extends StatelessWidget {
                   ),
                 );
               } else {
-                return Center(child: Text("No user details available."));
+                return const Center(child: Text("No user details available."));
               }
             },
           );

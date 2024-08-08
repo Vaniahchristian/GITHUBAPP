@@ -1,16 +1,15 @@
-import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:githubapp/data/models/github_user_model.dart';
-import 'package:githubapp/presentation/widgets/filter_options.dart';
-import 'package:githubapp/providers/filter_provider.dart';
-import 'package:githubapp/providers/user_provider.dart';
-import 'package:http/http.dart' as http;
+import 'package:connectivity/connectivity.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../domain/entities/user_entity.dart';
+import '../../domain/entities/github_user_entity.dart';
+import '../providers/filter_provider.dart';
+import '../providers/user_provider.dart';
+import '../widgets/filter_options.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -278,8 +277,8 @@ class _HomepageState extends State<Homepage> {
       final filterProvider = Provider.of<FilterProvider>(context, listen: false);
       await filterProvider.fetchUsersByFilter(
         filterOptions['name'],
-        exactFollowers: filterOptions['exactFollowers'],
-        exactRepos: filterOptions['exactRepos'],
+        //exactFollowers: filterOptions['exactFollowers'],
+        //exactRepos: filterOptions['exactRepos'],
       );
       setState(() {
         _isFiltered = true;

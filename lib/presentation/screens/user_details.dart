@@ -1,13 +1,16 @@
-// user_details.dart
+
+
+
+import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../Domain/Entities/user_entity.dart';
-import '../../Providers/user_details_provider.dart';
-import '../../domain/entities/github_user_detail_entity.dart';
-import '../Widgets/widget _buildInfo_row.dart';
-import '../Widgets/widget_buildStat_column.dart';
+import '../../domain/entities/gitHub_user_detail_entity.dart';
+import '../../domain/entities/github_user_entity.dart';
+import '../providers/user_details_provider.dart';
+import '../widgets/build_info_row.dart';
+import '../widgets/build_stat_column.dart';
 
 class UserDetails extends StatelessWidget {
   final GitHubUserEntity user;

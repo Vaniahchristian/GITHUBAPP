@@ -1,7 +1,8 @@
+
+
 import 'package:equatable/equatable.dart';
 
 class GitHubUserDetailEntity extends Equatable {
-
   final String login;
   final String avatarUrl;
   final String htmlUrl;

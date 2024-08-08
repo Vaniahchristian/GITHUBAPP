@@ -1,8 +1,9 @@
 
 
 
-import '../entities/github_user_detail_entity.dart';
-import '../entities/user_entity.dart';
+
+import '../entities/gitHub_user_detail_entity.dart';
+import '../entities/github_user_entity.dart';
 
 abstract class GitHubRepository {
   Future<List<GitHubUserEntity>> fetchUsersByLocation(String location, {int page, int perPage});

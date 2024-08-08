@@ -1,3 +1,6 @@
+
+
+
 import 'package:equatable/equatable.dart';
 
 class GitHubUserEntity extends Equatable {

@@ -1,7 +1,11 @@
+
+
 import 'dart:convert';
-import 'package:githubapp/data/models/gitHub_user_detail_model.dart';
-import 'package:githubapp/data/models/github_user_model.dart';
+
 import 'package:http/http.dart' as http;
+
+import '../../models/github_user.dart';
+import '../../models/github_user_detail.dart';
 
 class GitHubService {
   static const String baseUrl = 'https://api.github.com';

@@ -1,34 +1,27 @@
 
-import '../../Domain/Entities/user_entity.dart';
+
+
+
+
+
+
+import '../../domain/entities/github_user_entity.dart';
 
 class GitHubUserModel extends GitHubUserEntity {
   const GitHubUserModel({
-    required String login,
-    required String avatarUrl,
-    required String htmlUrl,
-    String name = '',
-    String company = '',
-    String blog = '',
-    String location = '',
-    String email = '',
-    String bio = '',
-    int publicRepos = 0,
-    int followers = 0,
-    int following = 0,
-  }) : super(
-    login: login,
-    avatarUrl: avatarUrl,
-    htmlUrl: htmlUrl,
-    name: name,
-    company: company,
-    blog: blog,
-    location: location,
-    email: email,
-    bio: bio,
-    publicRepos: publicRepos,
-    followers: followers,
-    following: following,
-  );
+    required super.login,
+    required super.avatarUrl,
+    required super.htmlUrl,
+    String super.name = '',
+    String super.company = '',
+    String super.blog = '',
+    String super.location = '',
+    String super.email = '',
+    String super.bio = '',
+    int super.publicRepos = 0,
+    int super.followers = 0,
+    int super.following = 0,
+  });
 
   factory GitHubUserModel.fromJson(Map<String, dynamic> json) {
     return GitHubUserModel(

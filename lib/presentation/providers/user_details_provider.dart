@@ -1,6 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:githubapp/domain/entities/github_user_detail_entity.dart';
-import '../domain/usecases/get_user_details.dart';
+
+
+
+
+import 'package:flutter/cupertino.dart';
+
+import '../../domain/entities/gitHub_user_detail_entity.dart';
+import '../../domain/usecases/fetch_user_details.dart';
 
 class UserDetailsProvider extends ChangeNotifier {
   final FetchUserDetailsUsecase _fetchUserDetailsUsecase;

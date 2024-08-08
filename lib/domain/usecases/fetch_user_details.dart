@@ -1,6 +1,8 @@
-import 'package:githubapp/domain/entities/github_user_detail_entity.dart';
-import '../Entities/user_entity.dart';
-import '../Repositories/github_repository.dart';
+
+
+
+import '../entities/gitHub_user_detail_entity.dart';
+import '../repositories/github_repository.dart';
 
 class FetchUserDetailsUsecase {
   final GitHubRepository repository;

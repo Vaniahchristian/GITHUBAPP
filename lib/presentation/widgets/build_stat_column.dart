@@ -18,7 +18,7 @@ class StatColumnWidget extends StatelessWidget {
         Text(
           value,
           style: const TextStyle(
-            fontSize: 18,
+            fontSize: 25,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),

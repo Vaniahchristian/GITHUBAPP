@@ -5,6 +5,8 @@ class FilterOptions extends StatelessWidget {
   final TextEditingController followersController = TextEditingController();
   final TextEditingController reposController = TextEditingController();
 
+  FilterOptions({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -18,7 +20,7 @@ class FilterOptions extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Heading
-              Text(
+              const Text(
                 'Search By Name',
                 style: TextStyle(
                   fontSize: 20,
@@ -26,22 +28,18 @@ class FilterOptions extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Name Field
               TextField(
                 controller: nameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Name',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.person),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 40),
 
-              SizedBox(height: 10),
-              // Minimum Repositories Field
-
-              SizedBox(height: 20),
               // Action Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -50,12 +48,12 @@ class FilterOptions extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancel'),
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.green,
+                      foregroundColor: Color(0xFF36827F),
                     ),
+                    child: const Text('Cancel'),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () {
                       final filterOptions = {
@@ -65,11 +63,11 @@ class FilterOptions extends StatelessWidget {
                       };
                       Navigator.pop(context, filterOptions);
                     },
-                    child: Text('Search'),
                     style:ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Colors.green,
+                      foregroundColor: Colors.white, backgroundColor: Color(0xFF36827F),
 
                     ),
+                    child: const Text('Search'),
 
 
                   ),

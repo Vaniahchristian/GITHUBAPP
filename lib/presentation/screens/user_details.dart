@@ -1,8 +1,9 @@
 
 
 
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:share/share.dart';
+//import 'package:share/share.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../domain/entities/gitHub_user_detail_entity.dart';
@@ -131,7 +132,7 @@ class UserDetails extends StatelessWidget {
                         const SizedBox(height: 16),
                         Row(
                           children: [
-                            const Icon(Icons.link, color: Colors.grey),
+                            const Icon(Icons.link, color: Color(0xFF36827F)),
                             const SizedBox(width: 8),
                             Expanded(
                               child: InkWell(

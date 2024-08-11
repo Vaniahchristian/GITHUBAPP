@@ -20,7 +20,7 @@ class InfoRowWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Icon(icon, color: Colors.grey),
+          Icon(icon, color: const Color(0xFF36827F),),
           const SizedBox(width: 8),
           Expanded(
             child: Text(

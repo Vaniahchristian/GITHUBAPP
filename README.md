@@ -79,8 +79,8 @@ Once the app is running, users can:
 
 Here are some screenshots to showcase the features and UI of the app:
 
-![Screenshot 1](assets/img.png)
-![Screenshot 2](assets/img_1.png)
+![Screenshot 1](assets/img_2.png)
+![Screenshot 2](assets/img_3.png)
 
 ## Contributing
 

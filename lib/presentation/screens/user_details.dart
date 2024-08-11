@@ -54,17 +54,17 @@ class UserDetails extends StatelessWidget {
         actions: [
           Consumer<UserDetailsProvider>(
             builder: (context, provider, child) {
-              if (provider.isLoading) {
-                return const CircularProgressIndicator();
-              } else if (provider.userDetails != null) {
+              //if (provider.isLoading) {
+                //return CircularProgressIndicator();
+              //} else if (provider.userDetails != null) {
                 return IconButton(
                   icon: const Icon(Icons.share),
                   onPressed: () => _shareProfile(provider.userDetails!),
                   color: Colors.white,
                 );
-              } else {
+              //} else {
                 return const SizedBox.shrink();
-              }
+              //}
             },
           ),
         ],

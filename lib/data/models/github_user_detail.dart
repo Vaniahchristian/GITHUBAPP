@@ -1,9 +1,8 @@
 
-
-
-
-
 import '../../domain/entities/gitHub_user_detail_entity.dart';
+
+
+
 
 class GitHubUserDetailModel extends GitHubUserDetailEntity {
   const GitHubUserDetailModel({
@@ -21,7 +20,8 @@ class GitHubUserDetailModel extends GitHubUserDetailEntity {
     super.following = 0,
   });
 
-  factory GitHubUserDetailModel.fromJson(Map<String, dynamic> json) {
+  factory GitHubUserDetailModel.fromJson(Map<String, dynamic> json)
+  {
     return GitHubUserDetailModel(
       login: json['login'] ?? '',
       avatarUrl: json['avatar_url'] ?? '',
@@ -38,7 +38,7 @@ class GitHubUserDetailModel extends GitHubUserDetailEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  /*Map<String, dynamic> toJson() {
     return {
       'login': login,
       'avatar_url': avatarUrl,
@@ -53,7 +53,7 @@ class GitHubUserDetailModel extends GitHubUserDetailEntity {
       'followers': followers,
       'following': following,
     };
-  }
+  }*/
 
   GitHubUserDetailEntity toEntity() {
     return GitHubUserDetailEntity(

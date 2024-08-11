@@ -1,7 +1,4 @@
 
-
-
-
 import '../../domain/entities/gitHub_user_detail_entity.dart';
 import '../../domain/entities/github_user_entity.dart';
 import '../../domain/repositories/github_repository.dart';
@@ -24,7 +21,7 @@ class GitHubRepositoryImpl implements GitHubRepository {
 
   @override
   Future<List<GitHubUserEntity>> fetchUsersByFilter({required String name, int minFollowers = 0, int minRepos = 0}) async {
-    final List<GitHubUserModel> userModels = await _gitHubService.fetchUsersByFilter(name: name, exactFollowers: minFollowers, exactRepos: minRepos);
+    final List<GitHubUserModel> userModels = await _gitHubService.fetchUsersByFilter(name: name);
     return userModels.map((model) => model.toEntity()).toList();
   }
 

@@ -33,21 +33,10 @@ class GitHubService {
 
   Future<List<GitHubUserModel>> fetchUsersByFilter({
     required String name,
-    int? exactFollowers,
-    int? exactRepos,
   }) async {
-    final StringBuffer query = StringBuffer();
-    query.write('$baseUrl/search/users?q=$name');
+    final String query = '$baseUrl/search/users?q=$name';
 
-    if (exactFollowers != null) {
-      query.write('+followers:>=$exactFollowers');
-    }
-
-    if (exactRepos != null) {
-      query.write('+repos:>=$exactRepos');
-    }
-
-    final response = await http.get(Uri.parse(query.toString()));
+    final response = await http.get(Uri.parse(query));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -56,4 +45,5 @@ class GitHubService {
       throw Exception('Failed to load users');
     }
   }
+
 }

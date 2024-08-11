@@ -1,4 +1,3 @@
-import 'package:http/http.dart' as http;
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:connectivity/connectivity.dart';
@@ -28,7 +27,7 @@ class _HomepageState extends State<Homepage> {
   late Stream<ConnectivityResult> _connectivityStream;
   late Connectivity _connectivity;
 
-  final List<GitHubUserEntity> _filteredUsers = [];
+  //List<GitHubUserEntity> _filteredUsers = [];
   bool _isFiltered = false;
   bool _isNoInternet = false;
 
@@ -45,20 +44,9 @@ class _HomepageState extends State<Homepage> {
       _checkConnection();
     });
   }
-
   Future<void> _checkConnection() async {
     ConnectivityResult result = await _connectivity.checkConnectivity();
     bool isConnected = result != ConnectivityResult.none;
-
-    // Perform an actual network request to verify internet connectivity
-    if (isConnected) {
-      try {
-        final response = await http.get(Uri.parse('https://www.google.com'));
-        isConnected = response.statusCode == 200;
-      } catch (e) {
-        isConnected = false;
-      }
-    }
 
     setState(() {
       _connectionStatus = result;
@@ -69,6 +57,7 @@ class _HomepageState extends State<Homepage> {
       _pagingController.refresh();
     }
   }
+
 
   Future<void> _fetchPage(int pageKey) async {
     if (_isNoInternet) {
@@ -278,8 +267,6 @@ class _HomepageState extends State<Homepage> {
       final filterProvider = Provider.of<FilterProvider>(context, listen: false);
       await filterProvider.fetchUsersByFilter(
         filterOptions['name'],
-        //exactFollowers: filterOptions['exactFollowers'],
-        //exactRepos: filterOptions['exactRepos'],
       );
       setState(() {
         _isFiltered = true;

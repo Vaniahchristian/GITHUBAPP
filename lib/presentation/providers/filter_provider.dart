@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../../domain/entities/github_user_entity.dart';
 import '../../domain/usecases/filter_users_usecase.dart';
 
+
 class FilterProvider extends ChangeNotifier {
   final FilterUsersUsecase _filterUsersUsecase;
 

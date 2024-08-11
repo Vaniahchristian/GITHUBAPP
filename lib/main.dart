@@ -6,7 +6,6 @@ import 'package:githubapp/presentation/screens/home.dart';
 import 'package:githubapp/presentation/screens/splash.dart';
 import 'package:githubapp/presentation/screens/user_details.dart';
 import 'package:provider/provider.dart';
-
 import 'data/datasource/remote_data_source/github_service.dart';
 import 'data/repository/github_repository_impl.dart';
 import 'domain/entities/github_user_entity.dart';

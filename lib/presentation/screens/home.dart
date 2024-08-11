@@ -8,7 +8,7 @@ import '../../domain/entities/github_user_entity.dart';
 import '../providers/filter_provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/filter_options.dart';
-
+git add
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
 
@@ -23,7 +23,7 @@ class _HomepageState extends State<Homepage> {
   );
 
   final int _perPage = 30; // Adjust perPage as needed
-  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  //ConnectivityResult _connectionStatus = ConnectivityResult.none;
   late Stream<ConnectivityResult> _connectivityStream;
   late Connectivity _connectivity;
 
@@ -49,7 +49,7 @@ class _HomepageState extends State<Homepage> {
     bool isConnected = result != ConnectivityResult.none;
 
     setState(() {
-      _connectionStatus = result;
+      //_connectionStatus = result;
       _isNoInternet = !isConnected;
     });
 

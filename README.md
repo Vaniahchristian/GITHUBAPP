@@ -79,8 +79,8 @@ Once the app is running, users can:
 
 Here are some screenshots to showcase the features and UI of the app:
 
-![Screenshot 1](assets/img_2.png)
-![Screenshot 2](assets/img_3.png)
+![Screenshot 1](assets/home.png)
+![Screenshot 2](assets/details.png)
 
 ## Contributing
 
@@ -104,7 +104,7 @@ If you'd like to contribute to this project, please follow these guidelines:
 
 ## Contact
 
-Provide your contact information for users or contributors to reach out.
+My contact information for users or contributors to reach out.
 
 - Email: vierycalliper@gmail.com
 - GitHub: [VaniahChristian](https://github.com/Vaniahchristian)

@@ -18,7 +18,7 @@ GitHubUserDetailModel _$GitHubUserDetailModelFromJson(
       location: json['location'] as String? ?? '',
       email: json['email'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
-      publicRepos: (json['publicRepos'] as num?)?.toInt() ?? 0,
+      publicRepos: (json['public_repos'] as num?)?.toInt() ?? 0,
       followers: (json['followers'] as num?)?.toInt() ?? 0,
       following: (json['following'] as num?)?.toInt() ?? 0,
     );

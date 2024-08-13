@@ -1,6 +1,3 @@
-
-
-
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 //import 'package:share/share.dart';
@@ -56,15 +53,15 @@ class UserDetails extends StatelessWidget {
           Consumer<UserDetailsProvider>(
             builder: (context, provider, child) {
               //if (provider.isLoading) {
-                //return CircularProgressIndicator();
+              //return CircularProgressIndicator();
               //} else if (provider.userDetails != null) {
-                return IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: () => _shareProfile(provider.userDetails!),
-                  color: Colors.white,
-                );
+              return IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () => _shareProfile(provider.userDetails!),
+                color: Colors.white,
+              );
               //} else {
-                return const SizedBox.shrink();
+              return const SizedBox.shrink();
               //}
             },
           ),
@@ -89,21 +86,45 @@ class UserDetails extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Center(
+
                           child: CircleAvatar(
                             backgroundImage: NetworkImage(userDetails.avatarUrl),
                             radius: 50,
                           ),
                         ),
                         const SizedBox(height: 10),
+
                         const SizedBox(height: 20),
                         if (userDetails.name != null)
                           Text(
                             userDetails.name!,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey[700],
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
+
+                        const SizedBox(height: 5),
+
+                        Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.location_on, color: Color(0xFF36827F),), // Green icon
+                              const SizedBox(width: 8),
+                              Text(
+                                userDetails.location ?? 'N/A',
+                                style: const TextStyle(color: Color(0xFF36827F), fontSize: 13), // Green text
+                              ),
+                            ],
+                          ),
+                        ),
+
+
+
+
                         const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -125,7 +146,7 @@ class UserDetails extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
                         const SizedBox(height: 16),
-                        InfoRowWidget(icon: Icons.location_on, info: userDetails.location),
+                       // InfoRowWidget(icon: Icons.location_on, info: userDetails.location),
                         InfoRowWidget(icon: Icons.email, info: userDetails.email),
                         InfoRowWidget(icon: Icons.business, info: userDetails.company),
                         InfoRowWidget(icon: Icons.description, info: userDetails.blog),

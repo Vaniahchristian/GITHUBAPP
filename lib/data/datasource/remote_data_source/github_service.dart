@@ -1,9 +1,7 @@
 
 
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-
 import '../../models/github_user.dart';
 import '../../models/github_user_detail.dart';
 

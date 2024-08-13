@@ -6,14 +6,12 @@ import 'package:githubapp/presentation/screens/home.dart';
 import 'package:githubapp/presentation/screens/splash.dart';
 import 'package:githubapp/presentation/screens/user_details.dart';
 import 'package:provider/provider.dart';
-import 'data/datasource/remote_data_source/github_service.dart';
-import 'data/repository/github_repository_impl.dart';
+import 'injector.dart';
 import 'domain/entities/github_user_entity.dart';
-import 'domain/usecases/fetch_user_details.dart';
-import 'domain/usecases/filter_users_usecase.dart';
-import 'domain/usecases/github_users_usecase.dart';
 
 void main() {
+  // Initialize the injector
+  init();
   runApp(const MyApp());
 }
 
@@ -22,24 +20,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final githubService = GitHubService();
-    final githubRepository = GitHubRepositoryImpl(githubService);
-
-    // Instantiate use cases
-    final fetchUsersByLocationUsecase = FetchUsersByLocationUsecase(githubRepository);
-    final fetchUserDetailsUsecase = FetchUserDetailsUsecase(githubRepository);
-    final filterUsersUsecase = FilterUsersUsecase(githubRepository);
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => UserProvider(fetchUsersByLocationUsecase),
+          create: (context) => sl<UserProvider>(),
         ),
         ChangeNotifierProvider(
-          create: (context) => UserDetailsProvider(fetchUserDetailsUsecase),
+          create: (context) => sl<UserDetailsProvider>(),
         ),
         ChangeNotifierProvider(
-          create: (context) => FilterProvider(filterUsersUsecase),
+          create: (context) => sl<FilterProvider>(),
         ),
       ],
       child: MaterialApp(

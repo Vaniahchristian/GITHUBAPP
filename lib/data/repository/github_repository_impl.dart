@@ -1,4 +1,6 @@
 
+import 'package:get_it/get_it.dart';
+
 import '../../domain/entities/gitHub_user_detail_entity.dart';
 import '../../domain/entities/github_user_entity.dart';
 import '../../domain/repositories/github_repository.dart';
@@ -6,12 +8,11 @@ import '../datasource/remote_data_source/github_service.dart';
 import '../models/github_user.dart';
 
 class GitHubRepositoryImpl implements GitHubRepository {
-  final GitHubService _gitHubService;
-
-  GitHubRepositoryImpl(this._gitHubService);
-
+  //final GitHubService _gitHubService;
+  final GitHubService _gitHubService = GetIt.instance<GitHubService>();
 
 
+  //GitHubRepositoryImpl(this._gitHubService);
 
   @override
   Future<List<GitHubUserEntity>> fetchUsersByLocation(String location, {int page = 1, int perPage = 30}) async {

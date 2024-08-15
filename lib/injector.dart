@@ -12,20 +12,16 @@ import 'package:githubapp/presentation/providers/user_provider.dart';
 final sl = GetIt.instance;
 
 void init() {
-  // Register the GitHubService
   sl.registerLazySingleton<GitHubService>(() => GitHubService());
 
-  // Register the GitHubRepository interface with its implementation
   sl.registerLazySingleton<GitHubRepository>(
-        () => GitHubRepositoryImpl(),
+    () => GitHubRepositoryImpl(),
   );
 
-  // Register UseCases
   sl.registerLazySingleton(() => FetchUsersByLocationUsecase());
   sl.registerLazySingleton(() => FetchUserDetailsUsecase());
   sl.registerLazySingleton(() => FilterUsersUsecase());
 
-  // Register Providers
   sl.registerFactory(() => UserProvider());
   sl.registerFactory(() => UserDetailsProvider());
   sl.registerFactory(() => FilterProvider());

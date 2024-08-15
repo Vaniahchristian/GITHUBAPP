@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 class FilterOptions extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
 
-
   FilterOptions({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: Container(
-        height: 250, // Adjust this value to change the height of the dialog
+      child: SizedBox(
+        height: 250,
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Heading
+
                 const Text(
                   'Search By Name',
                   style: TextStyle(
@@ -29,7 +29,7 @@ class FilterOptions extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Name Field
+
                 TextField(
                   controller: nameController,
                   decoration: const InputDecoration(
@@ -39,7 +39,7 @@ class FilterOptions extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                // Action Buttons
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

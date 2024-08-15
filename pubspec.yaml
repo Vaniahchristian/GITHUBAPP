@@ -55,6 +55,8 @@ flutter:
     - assets/img_3.png
     - assets/home.png
     - assets/details.png
+    - assets/first.png
+    - assets/second.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

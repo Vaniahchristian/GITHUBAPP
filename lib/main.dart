@@ -10,7 +10,6 @@ import 'injector.dart';
 import 'domain/entities/github_user_entity.dart';
 
 void main() {
-  // Initialize the injector
   init();
   runApp(const MyApp());
 }
@@ -44,11 +43,12 @@ class MyApp extends StatelessWidget {
           '/splash': (context) => const SplashScreen(),
           '/home': (context) => const Homepage(),
           '/userDetails': (context) => Builder(
-            builder: (context) {
-              final args = ModalRoute.of(context)!.settings.arguments as GitHubUserEntity;
-              return UserDetails(user: args);
-            },
-          ),
+                builder: (context) {
+                  final args = ModalRoute.of(context)!.settings.arguments
+                      as GitHubUserEntity;
+                  return UserDetails(user: args);
+                },
+              ),
         },
       ),
     );

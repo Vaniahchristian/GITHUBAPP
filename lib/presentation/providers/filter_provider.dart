@@ -4,14 +4,17 @@ import '../../domain/entities/github_user_entity.dart';
 import '../../domain/usecases/filter_users_usecase.dart';
 
 class FilterProvider extends ChangeNotifier {
-  final FilterUsersUsecase _filterUsersUsecase = GetIt.instance<FilterUsersUsecase>();
+  final FilterUsersUsecase _filterUsersUsecase =
+      GetIt.instance<FilterUsersUsecase>();
 
   List<GitHubUserEntity> _filteredUsers = [];
   bool _isLoading = false;
   String? _errorMessage;
 
   List<GitHubUserEntity> get filteredUsers => _filteredUsers;
+
   bool get isLoading => _isLoading;
+
   String? get errorMessage => _errorMessage;
 
   Future<void> fetchUsersByFilter(String name) async {

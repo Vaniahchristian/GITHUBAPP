@@ -1,5 +1,3 @@
-
-
 import 'package:equatable/equatable.dart';
 
 class GitHubUserDetailEntity extends Equatable {
@@ -33,17 +31,17 @@ class GitHubUserDetailEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    login,
-    avatarUrl,
-    htmlUrl,
-    name,
-    company,
-    blog,
-    location,
-    email,
-    bio,
-    publicRepos,
-    followers,
-    following,
-  ];
+        login,
+        avatarUrl,
+        htmlUrl,
+        name,
+        company,
+        blog,
+        location,
+        email,
+        bio,
+        publicRepos,
+        followers,
+        following,
+      ];
 }

@@ -20,7 +20,8 @@ class GitHubUserDetailModel extends GitHubUserDetailEntity {
     super.following = 0,
   });
 
-  factory GitHubUserDetailModel.fromJson(Map<String, dynamic> json) => _$GitHubUserDetailModelFromJson(json);
+  factory GitHubUserDetailModel.fromJson(Map<String, dynamic> json) =>
+      _$GitHubUserDetailModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$GitHubUserDetailModelToJson(this);
 

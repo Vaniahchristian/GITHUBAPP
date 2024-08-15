@@ -1,10 +1,9 @@
-
-
-
-
-
+import 'package:json_annotation/json_annotation.dart';
 import '../../domain/entities/gitHub_user_detail_entity.dart';
 
+part 'github_user_detail.g.dart';
+
+@JsonSerializable()
 class GitHubUserDetailModel extends GitHubUserDetailEntity {
   const GitHubUserDetailModel({
     required super.login,
@@ -21,39 +20,10 @@ class GitHubUserDetailModel extends GitHubUserDetailEntity {
     super.following = 0,
   });
 
-  factory GitHubUserDetailModel.fromJson(Map<String, dynamic> json) {
-    return GitHubUserDetailModel(
-      login: json['login'] ?? '',
-      avatarUrl: json['avatar_url'] ?? '',
-      htmlUrl: json['html_url'] ?? '',
-      name: json['name'] ?? '',
-      company: json['company'] ?? '',
-      blog: json['blog'] ?? '',
-      location: json['location'] ?? '',
-      email: json['email'] ?? '',
-      bio: json['bio'] ?? '',
-      publicRepos: json['public_repos'] ?? 0,
-      followers: json['followers'] ?? 0,
-      following: json['following'] ?? 0,
-    );
-  }
+  factory GitHubUserDetailModel.fromJson(Map<String, dynamic> json) =>
+      _$GitHubUserDetailModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'login': login,
-      'avatar_url': avatarUrl,
-      'html_url': htmlUrl,
-      'name': name,
-      'company': company,
-      'blog': blog,
-      'location': location,
-      'email': email,
-      'bio': bio,
-      'public_repos': publicRepos,
-      'followers': followers,
-      'following': following,
-    };
-  }
+  Map<String, dynamic> toJson() => _$GitHubUserDetailModelToJson(this);
 
   GitHubUserDetailEntity toEntity() {
     return GitHubUserDetailEntity(

@@ -8,7 +8,7 @@ import Foundation
 import connectivity_macos
 import connectivity_plus
 import path_provider_foundation
-import share_plus_macos
+import share_plus
 import url_launcher_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {

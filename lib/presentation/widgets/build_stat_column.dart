@@ -1,4 +1,4 @@
-// stat_column_widget.dart
+
 import 'package:flutter/material.dart';
 
 class StatColumnWidget extends StatelessWidget {
@@ -26,9 +26,9 @@ class StatColumnWidget extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
-            color: Colors.grey[600],
+            color: Color(0xFF36827F),
           ),
         ),
       ],

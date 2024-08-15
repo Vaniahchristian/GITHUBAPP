@@ -3,17 +3,18 @@
 
 
 import 'package:flutter/cupertino.dart';
-
+import 'package:get_it/get_it.dart';
 import '../../domain/entities/gitHub_user_detail_entity.dart';
 import '../../domain/usecases/fetch_user_details.dart';
 
 class UserDetailsProvider extends ChangeNotifier {
-  final FetchUserDetailsUsecase _fetchUserDetailsUsecase;
+
+  final FetchUserDetailsUsecase _fetchUserDetailsUsecase = GetIt.instance<FetchUserDetailsUsecase>();
   GitHubUserDetailEntity? _userDetails;
   bool _isLoading = false;
   String? _error;
 
-  UserDetailsProvider(this._fetchUserDetailsUsecase);
+
 
   GitHubUserDetailEntity? get userDetails => _userDetails;
   bool get isLoading => _isLoading;

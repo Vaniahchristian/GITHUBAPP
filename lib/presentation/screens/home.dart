@@ -1,4 +1,3 @@
-import 'package:http/http.dart' as http;
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:connectivity/connectivity.dart';
@@ -19,16 +18,16 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final TextEditingController _searchController = TextEditingController();
-  final PagingController<int, GitHubUserEntity> _pagingController = PagingController(
+  final PagingController<int, GitHubUserEntity> _pagingController =
+      PagingController(
     firstPageKey: 1,
   );
 
-  final int _perPage = 30; // Adjust perPage as needed
+  final int _perPage = 30;
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
   late Stream<ConnectivityResult> _connectivityStream;
   late Connectivity _connectivity;
 
-  final List<GitHubUserEntity> _filteredUsers = [];
   bool _isFiltered = false;
   bool _isNoInternet = false;
 
@@ -49,16 +48,6 @@ class _HomepageState extends State<Homepage> {
   Future<void> _checkConnection() async {
     ConnectivityResult result = await _connectivity.checkConnectivity();
     bool isConnected = result != ConnectivityResult.none;
-
-    // Perform an actual network request to verify internet connectivity
-    if (isConnected) {
-      try {
-        final response = await http.get(Uri.parse('https://www.google.com'));
-        isConnected = response.statusCode == 200;
-      } catch (e) {
-        isConnected = false;
-      }
-    }
 
     setState(() {
       _connectionStatus = result;
@@ -127,143 +116,167 @@ class _HomepageState extends State<Homepage> {
       ),
       body: _isNoInternet
           ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('No internet connection', style: TextStyle(color: Color(0xFF757575))),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _openSettings,
-              child: const Text('Open Settings'),
-            ),
-          ],
-        ),
-      )
-          : Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Container(
-              height: 55.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Row(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        labelText: 'Search by location',
-                        labelStyle: const TextStyle(color: Color(0xFF757575)),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.all(12.0),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.search, color: Color(0xFF26C6DA)),
-                          onPressed: () {
-                            setState(() {
-                              _isFiltered = false;
-                            });
-                            FocusScope.of(context).unfocus();
-                            _pagingController.refresh();
+                  const Text('No internet connection',
+                      style: TextStyle(color: Color(0xFF757575))),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _openSettings,
+                    child: const Text('Open Settings'),
+                  ),
+                ],
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Container(
+                    height: 55.0,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              labelText: 'Search by location',
+                              labelStyle:
+                                  const TextStyle(color: Color(0xFF757575)),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.all(12.0),
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.search,
+                                    color: Color(0xFF26C6DA)),
+                                onPressed: () {
+                                  setState(() {
+                                    _isFiltered = false;
+                                  });
+                                  FocusScope.of(context).unfocus();
+                                  _pagingController.refresh();
+                                },
+                              ),
+                            ),
+                            cursorColor: const Color(0xFF1E88E5),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.filter_list,
+                              color: Color(0xFF26C6DA)),
+                          onPressed: () async {
+                            _showFilterOptions(context);
                           },
                         ),
-                      ),
-                      cursorColor: const Color(0xFF1E88E5),
+                      ],
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.filter_list, color: Color(0xFF26C6DA)),
-                    onPressed: () async {
-                      _showFilterOptions(context);
-                    },
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: _isFiltered
+                        ? Consumer<FilterProvider>(
+                            builder: (context, filterProvider, child) {
+                              return ListView.builder(
+                                itemCount: filterProvider.filteredUsers.length,
+                                itemBuilder: (context, index) {
+                                  final user =
+                                      filterProvider.filteredUsers[index];
+                                  return Card(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    elevation: 4.0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(user.avatarUrl),
+                                      ),
+                                      title: Text(user.login,
+                                          style: const TextStyle(
+                                              color: Color(0xFF212121))),
+                                      subtitle: Text(user.htmlUrl,
+                                          style: const TextStyle(
+                                              color: Color(0xFF757575))),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/userDetails',
+                                          arguments: user,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          )
+                        : Consumer<UserProvider>(
+                            builder: (context, userProvider, child) {
+                              return PagedListView<int, GitHubUserEntity>(
+                                pagingController: _pagingController,
+                                builderDelegate:
+                                    PagedChildBuilderDelegate<GitHubUserEntity>(
+                                  itemBuilder: (context, item, index) => Card(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    elevation: 4.0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(item.avatarUrl),
+                                      ),
+                                      title: Text(item.login,
+                                          style: const TextStyle(
+                                              color: Color(0xFF212121))),
+                                      subtitle: Text(item.htmlUrl,
+                                          style: const TextStyle(
+                                              color: Color(0xFF757575))),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/userDetails',
+                                          arguments: item,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  firstPageErrorIndicatorBuilder: (context) =>
+                                      const Center(
+                                    child: Text('No users found',
+                                        style: TextStyle(
+                                            color: Color(0xFF757575))),
+                                  ),
+                                  noItemsFoundIndicatorBuilder: (context) =>
+                                      const Center(
+                                    child: Text('No users found',
+                                        style: TextStyle(
+                                            color: Color(0xFF757575))),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: _isFiltered
-                  ? Consumer<FilterProvider>(
-                builder: (context, filterProvider, child) {
-                  return ListView.builder(
-                    itemCount: filterProvider.filteredUsers.length,
-                    itemBuilder: (context, index) {
-                      final user = filterProvider.filteredUsers[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        elevation: 4.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(user.avatarUrl),
-                          ),
-                          title: Text(user.login, style: const TextStyle(color: Color(0xFF212121))),
-                          subtitle: Text(user.htmlUrl, style: const TextStyle(color: Color(0xFF757575))),
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              '/userDetails',
-                              arguments: user,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  );
-                },
-              )
-                  : Consumer<UserProvider>(
-                builder: (context, userProvider, child) {
-                  return PagedListView<int, GitHubUserEntity>(
-                    pagingController: _pagingController,
-                    builderDelegate: PagedChildBuilderDelegate<GitHubUserEntity>(
-                      itemBuilder: (context, item, index) => Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        elevation: 4.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(item.avatarUrl),
-                          ),
-                          title: Text(item.login, style: const TextStyle(color: Color(0xFF212121))),
-                          subtitle: Text(item.htmlUrl, style: const TextStyle(color: Color(0xFF757575))),
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              '/userDetails',
-                              arguments: item,
-                            );
-                          },
-                        ),
-                      ),
-                      firstPageErrorIndicatorBuilder: (context) => const Center(
-                        child: Text('No users found', style: TextStyle(color: Color(0xFF757575))),
-                      ),
-                      noItemsFoundIndicatorBuilder: (context) => const Center(
-                        child: Text('No users found', style: TextStyle(color: Color(0xFF757575))),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
       backgroundColor: Colors.white,
     );
   }
@@ -275,11 +288,10 @@ class _HomepageState extends State<Homepage> {
     );
 
     if (filterOptions != null) {
-      final filterProvider = Provider.of<FilterProvider>(context, listen: false);
+      final filterProvider =
+          Provider.of<FilterProvider>(context, listen: false);
       await filterProvider.fetchUsersByFilter(
         filterOptions['name'],
-        //exactFollowers: filterOptions['exactFollowers'],
-        //exactRepos: filterOptions['exactRepos'],
       );
       setState(() {
         _isFiltered = true;

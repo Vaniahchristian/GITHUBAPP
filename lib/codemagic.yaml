@@ -1,0 +1,75 @@
+workflows:
+  build_and_test:
+    name: Build and Test
+    environment:
+      flutter: stable
+      xcode: latest
+    scripts:
+      - name: Install dependencies
+        script: flutter pub get
+
+      # Android Signing Configuration (Optional: if using a custom keystore for signing)
+      - name: Set up keystore
+        script: |
+          echo $KEYSTORE | base64 --decode > /tmp/keystore.jks
+          echo "storePassword=$KEYSTORE_PASSWORD" > "$CM_BUILD_DIR/android/key.properties"
+          echo "keyPassword=$KEY_PASSWORD" >> "$CM_BUILD_DIR/android/key.properties"
+          echo "keyAlias=$KEY_ALIAS" >> "$CM_BUILD_DIR/android/key.properties"
+          echo "storeFile=/tmp/keystore.jks" >> "$CM_BUILD_DIR/android/key.properties"
+
+      - name: Build Android APK
+        script: flutter build apk --release
+
+      - name: Run tests
+        script: flutter test
+
+      - name: Build iOS IPA
+        script: |
+          flutter build ios --release --no-codesign
+          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -archivePath $CM_BUILD_DIR/ios/Runner.xcarchive archive
+          xcodebuild -exportArchive -archivePath $CM_BUILD_DIR/ios/Runner.xcarchive -exportOptionsPlist ios/Runner/ExportOptions.plist -exportPath $CM_BUILD_DIR/build/ios
+
+    # Caching
+    cache:
+      paths:
+        - $HOME/.pub-cache
+        - $HOME/programs/flutter/.pub-cache
+        - ios/Pods
+        - $HOME/.cocoapods
+
+  deploy:
+    name: Deploy
+    environment:
+      flutter: stable
+      xcode: latest
+    scripts:
+      - name: Deploy to App Stores
+        script: fastlane deploy
+
+    publishing:
+      google_play:
+        credentials: $GOOGLE_PLAY_CREDENTIALS
+        track: production
+        artifact_paths:
+          - build/app/outputs/flutter-apk/app-release.apk
+      app_store_connect:
+        api_key: $APP_STORE_API_KEY
+        issuer_id: $APP_STORE_ISSUER_ID
+        app_identifier: $APP_IDENTIFIER
+        artifact_paths:
+          - build/ios/ipa/*.ipa
+
+    # Notifications
+    notify:
+      email:
+        recipients:
+          - vierycalliper@gmail.com
+        notify:
+          success: true
+          failure: true
+      slack:
+        channel: #mobile-development
+        notify_on_build_start: true
+        notify:
+          success: true
+          failure: true
